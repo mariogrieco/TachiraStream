@@ -2,7 +2,7 @@ var express = require('express')
 var app = express();
 
 app.set('view engine', 'pug')
-app.use(express.static('./public'))
+// app.use(express.static('./public'))
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -24,12 +24,13 @@ app.get('/', function (req, res) {
 t.track('tachira')
 
 io.on('connection', function (socket) {
+    
     t.on('tweet', function (tweet) {
-      socket.emit('tweet', tweet); 
+      io.emit('tweet', tweet); 
     })
         
     t.on('error', function (err) {
-        socket.emit('err', err);
+        io.emit('err', err);
     })
 });
 
