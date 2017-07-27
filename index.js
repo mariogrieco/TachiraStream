@@ -26,7 +26,6 @@ t.track('tachira')
 io.on('connection', function (socket) {
     t.on('tweet', function (tweet) {
       socket.emit('tweet', tweet); 
-      console.log(tweet.text) 
     })
         
     t.on('error', function (err) {
