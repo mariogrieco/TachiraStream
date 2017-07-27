@@ -20505,11 +20505,13 @@ function UPDATE() {
 
 $(function () {
   console.log('load 5d');
+  var cola = [];
 
   socket.on('tweet', function (data) {
     // console.log(data)
+    cola.push(template(data));
     setTimeout(function () {
-      append(template(data));
+      append(cola.pop());
     }, 5000);
   });
 

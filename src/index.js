@@ -62,10 +62,14 @@ function UPDATE(){
 
 $(function() {
   console.log('load 5d')
+  const cola = []
 
   socket.on('tweet', function (data) {
     // console.log(data)
-    append(template(data))
+    cola.push(template(data))
+    setTimeout(function(){
+      append(cola.pop())
+    },5000)
   });
  
   socket.on('err', function (data) {
