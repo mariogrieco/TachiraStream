@@ -20493,27 +20493,31 @@ function UPDATE() {
     yo.update(item, template(references[1][index]));
   });
 
-  if (references[0].length > 20) {
-    references[0].slice(20).forEach(function (item) {
+  if (references[0].length > 30) {
+    references[0].slice(30).forEach(function (item) {
       item.remove();
     });
 
-    references[0] = references[0].slice(0, 20);
-    references[1] = references[1].slice(0, 20);
+    references[0] = references[0].slice(0, 30);
+    references[1] = references[1].slice(0, 30);
   }
 }
 
 $(function () {
+  console.log('load 5d');
+
   socket.on('tweet', function (data) {
     // console.log(data)
-    append(template(data));
+    setTimeout(function () {
+      append(template(data));
+    }, 5000);
   });
 
   socket.on('err', function (data) {
     alert('Oh no!, Oops porfas reporta este problema!');
   });
 
-  setInterval(UPDATE, 5000);
+  setInterval(UPDATE, 6000);
 });
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);
