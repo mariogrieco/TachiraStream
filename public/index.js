@@ -20459,10 +20459,10 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 
 var io = require('socket.io-client');
 window.io = io;
-var yo = require('yo-yo');
-// const socket = io.connect('localhost:8080');
 var socket = io.connect('http://tachira.herokuapp.com');
+var yo = require('yo-yo');
 window.$ = require('jquery');
+
 var references = [[], []];
 
 // if (!window.Intl) {
@@ -20473,21 +20473,6 @@ window.IntlRelativeFormat = require('intl-relativeformat');
 require('intl-relativeformat/dist/locale-data/es.js');
 
 var rf = new IntlRelativeFormat('es');
-
-$(function () {
-  console.log('load docum');
-  socket.on('tweet', function (data) {
-    // console.log(data)
-    append(template(data));
-    UPDATE();
-  });
-
-  socket.on('err', function (data) {
-    alert('Oh no!, Oops porfas reporta este problema!');
-  });
-
-  setInterval(UPDATE, 2500);
-});
 
 function append(item) {
   var spiner = yo(_templateObject);
@@ -20517,5 +20502,18 @@ function UPDATE() {
   });
 }
 var cola = [];
+
+console.log('load documv');
+socket.on('tweet', function (data) {
+  // console.log(data)
+  append(template(data));
+  UPDATE();
+});
+
+socket.on('err', function (data) {
+  alert('Oh no!, Oops porfas reporta este problema!');
+});
+
+setInterval(UPDATE, 2500);
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);
