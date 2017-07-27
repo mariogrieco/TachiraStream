@@ -62,12 +62,10 @@ function UPDATE(){
 
 $(function() {
   console.log('load 5d')
-  
+
   socket.on('tweet', function (data) {
     // console.log(data)
-    setTimeout(function(){
-      append(template(data))
-    },5000)
+    append(template(data))
   });
  
   socket.on('err', function (data) {

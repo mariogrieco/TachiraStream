@@ -27,7 +27,9 @@ t.track('sancristobal')
 io.on('connection', function (socket) {
     
     t.on('tweet', function (tweet) {
-      socket.emit('tweet', tweet) 
+        setTimeout(function(){
+          socket.emit('tweet', tweet) 
+        },5000)
     })
         
     t.on('error', function (err) {
