@@ -16,7 +16,7 @@ require('intl-relativeformat/dist/locale-data/es.js');
 var rf = new IntlRelativeFormat('es');
 
 $(function() {
-   console.log('load docu')
+   console.log('load docum')
   socket.on('tweet', function (data) {
     // console.log(data)
     append(template(data))
