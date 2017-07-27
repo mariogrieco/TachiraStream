@@ -46,10 +46,6 @@ function template(data){
 }
 
 function UPDATE(){
-  references[0].forEach(function(item,index){
-      yo.update(item, template(references[1][index]))
-  })
-
   if ( references[0].length > 23 ){
       references[0].slice(23).forEach(function(item){
         item.remove()
@@ -58,19 +54,20 @@ function UPDATE(){
       references[0] = references[0].slice(0,23)
       references[1] = references[1].slice(0,23)
   }
+
+  references[0].forEach(function(item,index){
+      yo.update(item, template(references[1][index]))
+  })
 }
 
 $(function() {
-  console.log('load med an')
+  console.log('load medlolan')
   const cola = []
 
   socket.on('tweet', function (data) {
     // console.log(data)
-    cola.push(template(data))
-    setTimeout(function(){
-      append(cola.shift())
-      UPDATE()
-    },5000)
+    append(template(data))
+    UPDATE()
   });
  
   socket.on('err', function (data) {
