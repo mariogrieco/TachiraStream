@@ -46,6 +46,12 @@ function template(data){
 }
 
 function UPDATE(){
+
+  references[0].forEach(function(item,index){
+      yo.update(item, template(references[1][index]))
+  })
+
+
   if ( references[0].length > 23 ){
       references[0].slice(23).forEach(function(item){
         item.remove()
@@ -54,23 +60,19 @@ function UPDATE(){
       references[0] = references[0].slice(0,23)
       references[1] = references[1].slice(0,23)
   }
-
-  references[0].forEach(function(item,index){
-      yo.update(item, template(references[1][index]))
-  })
 }
-  const cola = []
 
+  console.log('load docump')
 
-     console.log('load documv')
   socket.on('tweet', function (data) {
     // console.log(data)
-    append(template(data))
+    console.log('add')
     UPDATE()
+    append(template(data))
   });
  
   socket.on('err', function (data) {
     alert('Oh no!, Oops porfas reporta este problema!')
   });
 
-  setInterval(UPDATE,2500)
+  // setInterval(UPDATE,2500)
