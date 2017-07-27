@@ -1,17 +1,20 @@
-var io = require('socket.io-client');
+const io = require('socket.io-client');
 window.io = io;
-
 const yo = require('yo-yo')
 const socket = io.connect('http://tachira.herokuapp.com');
+// const socket = io.connect('localhost:8080');
+
+window.$ = require('jquery')
+let references = [[],[]]
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
 // }
 
-// var IntlRelativeFormat = require('intl-relativeformat');
-// require('intl-relativeformat/dist/locale-data/en.js');
+window.IntlRelativeFormat = require('intl-relativeformat');
+require('intl-relativeformat/dist/locale-data/es.js');
 
-// var rf = new IntlRelativeFormat('en');
+var rf = new IntlRelativeFormat('es');
 
 function append(item){
     let spiner = yo`<div class="spinner">
@@ -23,30 +26,49 @@ function append(item){
 }
 
 function template(data){
-    return yo`
+  let set = yo`
         <article class="tweets">
          <div class="por">
-          ${data.user.name} (@${data.user.screen_name})
+          ${data.user.name} - <span class="arrow">@${data.user.screen_name}</span>
           ${ data.user.verified ? yo`<div class="verifu"></div>` : ''}
          </div>
          <div class="hora">
-         ${data.created_at}
+         ${new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)) }
          </div>
          <div class="contenido">
           ${data.text}
          </div>
         </article>
     `;
+    references[0].push(set) //dom
+    references[1].push(data) // object data
+    return set
 }
 
+function UPDATE(){
+  references[0].forEach(function(item,index){
+      yo.update(item, template(references[1][index]))
+  })
+
+  if ( references[0].length > 20 ){
+      references[0].slice(20).forEach(function(item){
+        item.remove()
+      })
+
+      references[0] = references[0].slice(0,20)
+      references[1] = references[1].slice(0,20)
+  }
+}
+
+$(function() {
   socket.on('tweet', function (data) {
-      //created_at
-      //text
+    // console.log(data)
     append(template(data))
-    // console.log(data);
   });
  
   socket.on('err', function (data) {
-    // console.log('Oh no', data);
     alert('Oh no!, Oops porfas reporta este problema!')
   });
+
+  setInterval(UPDATE, 5000)
+});

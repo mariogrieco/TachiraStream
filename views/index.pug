@@ -1,6 +1,7 @@
 doctype html
 html(lang='es')
  head
+  script(type='text/javascript', src='an.js')
   meta(charset='UTF-8')
   title #tachira, en vivo tachira
   link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Bree+Serif|Lato")
@@ -10,7 +11,9 @@ html(lang='es')
   header 
    div.icon-twitter2
   div.letters
-   h1.now EN VIVO,  #TACHIRA !
+   h1.now 
+    span= "¡en vivo!"
+    span= "#TACHIRA"
   section.tweetBox
    div.spinner
     div.dot1
@@ -19,4 +22,3 @@ html(lang='es')
    link(rel="stylesheet", href="main.css")
  footer
  script(type='text/javascript', src='index.js')
- script(type='text/javascript', src='an.js')

@@ -8,11 +8,12 @@
     "start": "node index.js"
   },
   "author": "Mario Grieco <mariojosuexz@gmail.com> (https://github.com/mariogrieco)",
-  "license": "GNUv3",
+  "license": "GNU v3",
   "dependencies": {
     "express": "^4.15.3",
     "http": "0.0.0",
     "intl-relativeformat": "^2.0.0",
+    "jquery": "^3.2.1",
     "node-tweet-stream": "^2.0.1",
     "pug": "^2.0.0-rc.2",
     "socket.io": "^2.0.3",
