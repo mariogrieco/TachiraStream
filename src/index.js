@@ -1,17 +1,8 @@
 const io = require('socket.io-client');
 window.io = io;
 const yo = require('yo-yo')
-// const socket = io.connect('localhost:8080');
-
-
-$(function() {
-
-
-
-  console.log('load medlolan')
-  const socket = io.connect('http://tachira.herokuapp.com');
 window.$ = require('jquery')
-let references = [[],[]]
+
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
@@ -21,6 +12,15 @@ window.IntlRelativeFormat = require('intl-relativeformat');
 require('intl-relativeformat/dist/locale-data/es.js');
 
 var rf = new IntlRelativeFormat('es');
+// const socket = io.connect('localhost:8080');
+
+
+$(function() {
+  console.log('load medlolan')
+  const socket = io.connect('http://tachira.herokuapp.com');
+
+  let references = [[],[]]
+
 
 function append(item){
     let spiner = yo`<div class="spinner">
@@ -65,7 +65,8 @@ function UPDATE(){
       yo.update(item, template(references[1][index]))
   })
 }
-  const cola = []
+
+const cola = []
 
   socket.on('tweet', function (data) {
     // console.log(data)
