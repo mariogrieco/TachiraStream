@@ -61,7 +61,7 @@ function UPDATE(){
 }
 
 $(function() {
-  console.log('load')
+  console.log('load 5d')
   socket.on('tweet', function (data) {
     // console.log(data)
     setTimeout(function(){
