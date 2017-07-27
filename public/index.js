@@ -20460,7 +20460,10 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 var io = require('socket.io-client');
 window.io = io;
 var yo = require('yo-yo');
+// const socket = io.connect('localhost:8080');
+var socket = io.connect('http://tachira.herokuapp.com');
 window.$ = require('jquery');
+var references = [[], []];
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
@@ -20470,45 +20473,9 @@ window.IntlRelativeFormat = require('intl-relativeformat');
 require('intl-relativeformat/dist/locale-data/es.js');
 
 var rf = new IntlRelativeFormat('es');
-// const socket = io.connect('localhost:8080');
-
 
 $(function () {
-  console.log('load medlolan');
-  var socket = io.connect('http://tachira.herokuapp.com');
-
-  var references = [[], []];
-
-  function append(item) {
-    var spiner = yo(_templateObject);
-    var a = document.getElementsByClassName('tweetBox')[0];
-    a.insertBefore(item, document.getElementsByClassName('tweets')[0]);
-  }
-
-  function template(data) {
-    var set = yo(_templateObject2, data.user.name, data.user.screen_name, data.user.verified ? yo(_templateObject3) : '', new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)), data.text);
-    references[0].push(set); //dom
-    references[1].push(data); // object data
-    return set;
-  }
-
-  function UPDATE() {
-    if (references[0].length > 23) {
-      references[0].slice(23).forEach(function (item) {
-        item.remove();
-      });
-
-      references[0] = references[0].slice(0, 23);
-      references[1] = references[1].slice(0, 23);
-    }
-
-    references[0].forEach(function (item, index) {
-      yo.update(item, template(references[1][index]));
-    });
-  }
-
-  var cola = [];
-
+  console.log('load docu');
   socket.on('tweet', function (data) {
     // console.log(data)
     append(template(data));
@@ -20521,5 +20488,34 @@ $(function () {
 
   setInterval(UPDATE, 2500);
 });
+
+function append(item) {
+  var spiner = yo(_templateObject);
+  var a = document.getElementsByClassName('tweetBox')[0];
+  a.insertBefore(item, document.getElementsByClassName('tweets')[0]);
+}
+
+function template(data) {
+  var set = yo(_templateObject2, data.user.name, data.user.screen_name, data.user.verified ? yo(_templateObject3) : '', new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)), data.text);
+  references[0].push(set); //dom
+  references[1].push(data); // object data
+  return set;
+}
+
+function UPDATE() {
+  if (references[0].length > 23) {
+    references[0].slice(23).forEach(function (item) {
+      item.remove();
+    });
+
+    references[0] = references[0].slice(0, 23);
+    references[1] = references[1].slice(0, 23);
+  }
+
+  references[0].forEach(function (item, index) {
+    yo.update(item, template(references[1][index]));
+  });
+}
+var cola = [];
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);
