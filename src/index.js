@@ -68,13 +68,12 @@ $(function() {
     // console.log(data)
     cola.push(template(data))
     setTimeout(function(){
-      append(cola.pop())
+      append(cola.shift())
+      UPDATE()
     },5000)
   });
  
   socket.on('err', function (data) {
     alert('Oh no!, Oops porfas reporta este problema!')
   });
-
-  setInterval(UPDATE, 6000)
 });
