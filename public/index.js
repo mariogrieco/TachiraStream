@@ -20504,22 +20504,21 @@ function UPDATE() {
 }
 
 $(function () {
-  console.log('load 5d');
+  console.log('load med');
   var cola = [];
 
   socket.on('tweet', function (data) {
     // console.log(data)
     cola.push(template(data));
     setTimeout(function () {
-      append(cola.pop());
+      append(cola.shift());
+      UPDATE();
     }, 5000);
   });
 
   socket.on('err', function (data) {
     alert('Oh no!, Oops porfas reporta este problema!');
   });
-
-  setInterval(UPDATE, 6000);
 });
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);

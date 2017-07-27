@@ -61,7 +61,7 @@ function UPDATE(){
 }
 
 $(function() {
-  console.log('load 5d')
+  console.log('load med')
   const cola = []
 
   socket.on('tweet', function (data) {
