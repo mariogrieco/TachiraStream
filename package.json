@@ -1,0 +1,30 @@
+{
+  "name": "rescuekit",
+  "version": "0.1.0",
+  "description": "tool for emergency share data beetwen other acounts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Mario Grieco <mariojosuexz@gmail.com> (https://github.com/mariogrieco)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "http": "0.0.0",
+    "intl-relativeformat": "^2.0.0",
+    "node-tweet-stream": "^2.0.1",
+    "pug": "^2.0.0-rc.2",
+    "socket.io": "^2.0.3",
+    "yo-yo": "^1.4.1"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

@@ -1,0 +1,194 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?27b4ml');
+  src:  url('fonts/icomoon.eot?27b4ml#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?27b4ml') format('truetype'),
+    url('fonts/icomoon.woff?27b4ml') format('woff'),
+    url('fonts/icomoon.svg?27b4ml#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-user-check:before {
+  content: "\e975";
+}
+.icon-twitter2:before {
+  content: "\ea96";
+  font-size: 3em;
+  color: #f5f5f5;
+  display: block;
+  padding: 0.2em;
+}
+
+.letters {
+    display: block;
+    padding: 0.25em;
+    background-color: rgb(39,165,255);
+    text-align: center;
+}
+
+h1 {
+    display: inline-block;
+}
+
+body {
+    background: #e6ecf0;
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Lato', sans-serif;
+}
+
+header {
+ padding: 0.25em 0.5em;
+ background-color: #1B95E0;
+ margin-bottom: 0em;
+ text-align: center;
+ /*border-bottom: 1px solid #f2f2f2;*/
+}
+.tweetBox {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.now {
+    font-size: 1.5em;
+    color: #f5f5f5;
+    text-transform: uppercase;
+    font-weight: bolder;
+    text-shadow: 1px 1px 1px #8c8c8c;
+}
+.ahora {
+    color:#7ED321;
+    font-size: 14px;
+}
+
+.img {
+    background: rgb(39,165,255);
+    padding: 0.2em;
+    height: 2px;
+    /*border-radius:/ 50%*/
+}
+.tweets {
+    background-color: #fff;
+    border: 1px solid #e6ecf0;
+    min-height: 200px;
+    min-width: 200px;
+    display: block;    
+    position: relative;
+    /*border-radius: 0.15em; */
+    /*box-shadow: 1px 1px 1px #b8b8b8;*/
+    color: #000;
+    font-size: 16px;
+    font-family: Arial;
+    padding: 1em;
+}
+
+.hora {
+    display: block; 
+    color: #c2c2c2;
+}
+
+.por {
+    font-weight: bolder;
+    color: #333;
+    font-size: 1.35em;
+    line-height: 2.1em;
+}
+
+.verifu {
+    font-size: 22px;
+    color: #7ed321;
+    float: left;
+    margin: 0em 0.25em;
+    font-family: 'icomoon';
+}
+.verifu:after {
+    font-family: 'icomoon';
+    content: "\e975";
+}
+
+.contenido {
+    display: block;
+    text-align: left;
+    font-family: 'Bree Serif', serif;
+    color: #666;
+    padding: 1em 0.25em;
+}
+
+.figures {
+    font-weight: lighter;
+    position: absolute;
+    bottom: 0;
+    width:100%; 
+}
+
+.likes
+.rt {
+    font-weight: lighter;
+    color: #647b89;
+}
+/*spiner*/
+.spinner {
+    font-size: 1.2em;
+  margin: 2em auto;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  text-align: center;
+  
+  -webkit-animation: sk-rotate 2.0s infinite linear;
+  animation: sk-rotate 2.0s infinite linear;
+}
+
+.dot1, .dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #647b89;
+  border-radius: 100%;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
