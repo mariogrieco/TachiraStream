@@ -2,13 +2,12 @@ var express = require('express')
 var app = express();
 
 app.set('view engine', 'pug')
-// app.use(express.static('./public'))
+app.use(express.static('./public'))
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 const Twitter = require('node-tweet-stream')
-const config = require('./lib/config.js')
 
 const t = new Twitter({
     consumer_key: process.env.API_KEY,
