@@ -1,15 +1,16 @@
 var express = require('express')
-var app = express();
+var app = express()
 
 app.set('view engine', 'pug')
 app.use(express.static('./public'))
+app.set('port', (process.env.PORT || 4000));
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
 
-const Twitter = require('node-tweet-stream')
+var Twitter = require('node-tweet-stream')
 
-const t = new Twitter({
+var t = new Twitter({
     consumer_key: process.env.API_KEY,
     consumer_secret: process.env.API_SECRET,
     token: process.env.ACCESS_TOKEN,
@@ -17,20 +18,20 @@ const t = new Twitter({
 })
 
 app.get('/', function (req, res) {
-  res.render('index');
-});
+  res.render('index')
+})
 
 t.track('tachira')
 
 io.on('connection', function (socket) {
     
     t.on('tweet', function (tweet) {
-      socket.emit('tweet', tweet); 
+      socket.emit('tweet', tweet) 
     })
         
     t.on('error', function (err) {
-        socket.emit('err', err);
+        socket.emit('err', err)
     })
 });
 
-server.listen(80);
+server.listen(app.get('port'))
