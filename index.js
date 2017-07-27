@@ -26,11 +26,11 @@ t.track('tachira')
 io.on('connection', function (socket) {
     
     t.on('tweet', function (tweet) {
-      io.emit('tweet', tweet); 
+      socket.emit('tweet', tweet); 
     })
         
     t.on('error', function (err) {
-        io.emit('err', err);
+        socket.emit('err', err);
     })
 });
 
