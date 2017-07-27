@@ -9,9 +9,9 @@ const socket = io.connect('http://tachira.herokuapp.com');
 // }
 
 // var IntlRelativeFormat = require('intl-relativeformat');
-// require('intl-relativeformat/dist/locale-data/es.js');
+// require('intl-relativeformat/dist/locale-data/en.js');
 
-// var rf = new IntlRelativeFormat('es');
+// var rf = new IntlRelativeFormat('en');
 
 function append(item){
     let spiner = yo`<div class="spinner">

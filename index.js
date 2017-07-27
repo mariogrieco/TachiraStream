@@ -22,6 +22,7 @@ app.get('/', function (req, res) {
 })
 
 t.track('tachira')
+t.track('sancristobal')
 
 io.on('connection', function (socket) {
     
