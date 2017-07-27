@@ -61,7 +61,7 @@ function UPDATE(){
 }
 
 $(function() {
-  console.log('load med')
+  console.log('load med an')
   const cola = []
 
   socket.on('tweet', function (data) {
@@ -76,4 +76,6 @@ $(function() {
   socket.on('err', function (data) {
     alert('Oh no!, Oops porfas reporta este problema!')
   });
+
+  setInterval(UPDATE,5000)
 });
