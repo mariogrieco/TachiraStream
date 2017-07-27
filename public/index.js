@@ -20493,13 +20493,13 @@ function UPDATE() {
     yo.update(item, template(references[1][index]));
   });
 
-  if (references[0].length > 30) {
-    references[0].slice(30).forEach(function (item) {
+  if (references[0].length > 23) {
+    references[0].slice(23).forEach(function (item) {
       item.remove();
     });
 
-    references[0] = references[0].slice(0, 30);
-    references[1] = references[1].slice(0, 30);
+    references[0] = references[0].slice(0, 23);
+    references[1] = references[1].slice(0, 23);
   }
 }
 
@@ -20520,7 +20520,7 @@ $(function () {
     alert('Oh no!, Oops porfas reporta este problema!');
   });
 
-  setInterval(UPDATE, 1000);
+  setInterval(UPDATE, 2500);
 });
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);

@@ -77,5 +77,5 @@ $(function() {
     alert('Oh no!, Oops porfas reporta este problema!')
   });
 
-  setInterval(UPDATE,1000)
+  setInterval(UPDATE,2500)
 });
