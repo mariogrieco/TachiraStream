@@ -20458,10 +20458,10 @@ var _templateObject = _taggedTemplateLiteral(['\n        <article class="tweets"
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 // server
-// const socket = require('socket.io-client')('http://tachira.herokuapp.com');
+var socket = require('socket.io-client')('http://tachira.herokuapp.com');
 
 //localhost
-var socket = require('socket.io-client')('127.0.0.1');
+// const socket = require('socket.io-client')('...');
 
 var yo = require('yo-yo');
 var $ = window.$ = require('jquery');
