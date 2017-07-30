@@ -20452,17 +20452,21 @@ module.exports = [
 'use strict';
 
 var _templateObject = _taggedTemplateLiteral(['\n        <article class="tweets">\n         <div class="por">\n          ', ' - <span class="arrow">@', '</span>\n          ', '\n         </div>\n         <div class="hora">\n         ', '\n         </div>\n         <div class="contenido">\n          ', '\n         </div>\n        </article>\n    '], ['\n        <article class="tweets">\n         <div class="por">\n          ', ' - <span class="arrow">@', '</span>\n          ', '\n         </div>\n         <div class="hora">\n         ', '\n         </div>\n         <div class="contenido">\n          ', '\n         </div>\n        </article>\n    ']),
-    _templateObject2 = _taggedTemplateLiteral(['<div class="verifu"></div>'], ['<div class="verifu"></div>']);
+    _templateObject2 = _taggedTemplateLiteral(['<div class="verifu"></div>'], ['<div class="verifu"></div>']),
+    _templateObject3 = _taggedTemplateLiteral(['\n        <div class="spinner">\n          <div class="dot1"></div>\n          <div class="dot2"></div>\n          <div class="dot3"></div>\n        </div>'], ['\n        <div class="spinner">\n          <div class="dot1"></div>\n          <div class="dot2"></div>\n          <div class="dot3"></div>\n        </div>']);
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var io = window.io = require('socket.io-client');
+// server
+// const socket = require('socket.io-client')('http://tachira.herokuapp.com');
+
+//localhost
+var socket = require('socket.io-client')('127.0.0.1');
+
 var yo = require('yo-yo');
 var $ = window.$ = require('jquery');
 var bufer = [[], []];
 var references = [[], []];
-// const socket = io.connect('localhost:80');
-var socket = io.connect('http://tachira.herokuapp.com');
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
@@ -20485,13 +20489,17 @@ function template(data) {
   return set;
 }
 
+function justGen(data) {
+  return yo(_templateObject, data.user.name, data.user.screen_name, data.user.verified ? yo(_templateObject2) : '', new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)), data.text);
+}
+
 function removeLoader() {
   document.getElementsByClassName('spinner')[0].remove();
 }
 
 function UPDATE() {
   references[0].forEach(function (item, index) {
-    yo.update(item, template(references[1][index]));
+    yo.update(item, justGen(references[1][index]));
   });
 }
 
@@ -20502,32 +20510,46 @@ function addToBufer(data) {
   bufer[1].push(data);
 }
 
-$('document').ready(function () {
-  console.log('open port, document ready');
-
+socket.on('connect', function () {
+  console.log('connect');
   removeLoader();
+});
 
-  socket.on('tweet', function (data) {
-    UPDATE();
-    addToBufer(data);
-  });
+socket.on('tweet', function (data) {
+  console.log('tweet');
+  UPDATE();
+  addToBufer(data);
+});
 
-  socket.on('err', function (data) {
-    alert('Oh no!, Oops porfas reporta este problema!');
-  });
+socket.on('err', function (data) {
+  alert('Oh no!, Oops porfas reporta este problema!');
+});
 
-  $('.gMore').on('click', function () {
-    if (bufer[0].length > 0) {
-      bufer[0].forEach(function (item, index) {
-        append(item);
-        references[0].push(item);
-        references[1].push(bufer[1][index]);
-      });
+socket.on('disconnect', function () {
+  console.log('disconnect');
+  var item = yo(_templateObject3);
 
-      bufer = [[], []];
-      document.getElementsByClassName('mNum')[0].textContent = '0';
-    }
-  });
+  var a = document.getElementsByClassName('tweetBox')[0];
+  a.insertBefore(item, document.getElementsByClassName('tweets')[0]);
+});
+
+$('.gMore').on('click', function () {
+  if (references[0].length > 50 && bufer[0].length > 0) {
+    references[0].forEach(function (item, index) {
+      item.remove();
+    });
+    references = [[], []];
+  }
+  if (bufer[0].length > 0) {
+    bufer[0].forEach(function (item, index) {
+      append(item);
+      references[0].push(item);
+      references[1].push(bufer[1][index]);
+    });
+
+    bufer = [[], []];
+    document.getElementsByClassName('mNum')[0].textContent = '0';
+  }
 });
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);
