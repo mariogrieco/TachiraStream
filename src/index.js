@@ -6,11 +6,12 @@ const socket = require('socket.io-client')('http://tachira.herokuapp.com');
 
 const yo = require('yo-yo');
 const $ = window.$ = require('jquery');
-let bufer = [[],[]]
-let references = [[],[]]
+let bufer = [];
+let references = [];
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
+      //  require('intl/locale-data/jsonp/es.js');
 // }
 
 window.IntlRelativeFormat = require('intl-relativeformat');
@@ -21,26 +22,6 @@ var rf = new IntlRelativeFormat('es');
 function append(item){
     var a = document.getElementsByClassName('tweetBox')[0];
     a.insertBefore(item, document.getElementsByClassName('tweets')[0]);
-}
-
-function template(data){
-  let set = yo`
-        <article class="tweets">
-         <div class="por">
-          ${data.user.name} - <span class="arrow">@${data.user.screen_name}</span>
-          ${ data.user.verified ? yo`<div class="verifu"></div>` : ''}
-         </div>
-         <div class="hora">
-         ${new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)) }
-         </div>
-         <div class="contenido">
-          ${data.text}
-         </div>
-        </article>
-    `;
-    references[0].push(set) //dom
-    references[1].push(data) // object data
-    return set
 }
 
 function justGen(data){
@@ -64,29 +45,33 @@ function removeLoader(){
   document.getElementsByClassName('spinner')[0].remove()
 }
 
+// *
 function UPDATE(){
-    references[0].forEach(function(item,index){
-      yo.update(item, justGen(references[1][index]))
+    references.forEach(function(item){
+      yo.update(item, justGen(item.data))
     })
 }
 
 function addToBufer(data){
   var item = document.getElementsByClassName('mNum')[0];
-  item.textContent = parseInt(item.textContent)+1
-  bufer[0].push(template(data))
-  bufer[1].push(data)
+  item.textContent = parseInt(item.textContent)+1;
+  var ctx = justGen(data);
+  ctx.data = data;
+  bufer.push(ctx)
 }
 
 
 socket.on('connect', function(){
   console.log('connect')
   removeLoader()
+  
 });
+
 
 socket.on('tweet', function (data) {
    console.log('tweet')
-    UPDATE()
     addToBufer(data)
+    UPDATE()
 });
  
 socket.on('err', function (data) {
@@ -107,20 +92,18 @@ socket.on('disconnect', function(){
 });
 
 $('.gMore').on('click', () => {
-    if ( references[0].length > 50 && bufer[0].length > 0) {
-      references[0].forEach(function(item,index){
+    if ( references.length >= 50 && bufer.length >= 1) {
+      references.forEach(function(item){
         item.remove()
       });
-      references = [[], []];
+      references = [];
     }
-    if ( bufer[0].length > 0 ) {
-        bufer[0].forEach((item, index) => {
+    if ( bufer.length > 0 ) {
+        bufer.forEach((item, index) => {
           append(item)
-          references[0].push(item)
-          references[1].push(bufer[1][index])
+          references.push(item)
         })
-
-        bufer = [[], []]
+        bufer = [];
         document.getElementsByClassName('mNum')[0].textContent = '0';
     }
 })
