@@ -28,8 +28,8 @@ var t = new Twitter({
 // })
 
 t.track('tachira')
-t.track('sancristobal')
-t.track('app30jtachira')
+// t.track('sancristobal')
+// t.track('app30jtachira')
 
 io.on('connection', function (socket) {
     
