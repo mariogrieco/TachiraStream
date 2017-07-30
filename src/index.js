@@ -4,7 +4,7 @@ const $ = window.$ = require('jquery')
 let bufer = [[],[]]
 let references = [[],[]]
 // const socket = io.connect('localhost:80');
-const socket = io.connect('http://tachira.herokuapp.com:80');
+const socket = io.connect('http://tachira.herokuapp.com');
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`

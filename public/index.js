@@ -20462,7 +20462,7 @@ var $ = window.$ = require('jquery');
 var bufer = [[], []];
 var references = [[], []];
 // const socket = io.connect('localhost:80');
-var socket = io.connect('http://tachira.herokuapp.com:80');
+var socket = io.connect('http://tachira.herokuapp.com');
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
