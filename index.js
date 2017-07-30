@@ -3,7 +3,7 @@ var app = express()
 
 app.set('view engine', 'pug')
 app.use(express.static('./public'))
-app.set('port', (process.env.PORT || 4000));
+app.set('port', (process.env.PORT || 80));
 
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
@@ -35,5 +35,4 @@ io.on('connection', function (socket) {
     })
 });
 
-server.listen(app.get('port'))
-// server.listen(8080)
+server.listen(app.get('port'));

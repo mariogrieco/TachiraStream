@@ -198,3 +198,21 @@ h1 span {
     -webkit-transform: scale(1.0);
   }
 }
+
+ /*View more X tweets  */
+.gMore {
+    margin: 1em;
+    color: #888;
+    display: block;
+    padding: 0.5em;
+    border: 2px solid #1B95E0;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 2em;
+    cursor: pointer;
+}
+
+.mNum {
+    padding: 0em 0.2em;
+    cursor: pointer;
+}

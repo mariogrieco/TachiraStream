@@ -20451,19 +20451,18 @@ module.exports = [
 },{}],70:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['<div class="spinner">\n      <div class="dot1"></div>\n      <div class="dot2"></div>\n    </div>'], ['<div class="spinner">\n      <div class="dot1"></div>\n      <div class="dot2"></div>\n    </div>']),
-    _templateObject2 = _taggedTemplateLiteral(['\n        <article class="tweets">\n         <div class="por">\n          ', ' - <span class="arrow">@', '</span>\n          ', '\n         </div>\n         <div class="hora">\n         ', '\n         </div>\n         <div class="contenido">\n          ', '\n         </div>\n        </article>\n    '], ['\n        <article class="tweets">\n         <div class="por">\n          ', ' - <span class="arrow">@', '</span>\n          ', '\n         </div>\n         <div class="hora">\n         ', '\n         </div>\n         <div class="contenido">\n          ', '\n         </div>\n        </article>\n    ']),
-    _templateObject3 = _taggedTemplateLiteral(['<div class="verifu"></div>'], ['<div class="verifu"></div>']);
+var _templateObject = _taggedTemplateLiteral(['\n        <article class="tweets">\n         <div class="por">\n          ', ' - <span class="arrow">@', '</span>\n          ', '\n         </div>\n         <div class="hora">\n         ', '\n         </div>\n         <div class="contenido">\n          ', '\n         </div>\n        </article>\n    '], ['\n        <article class="tweets">\n         <div class="por">\n          ', ' - <span class="arrow">@', '</span>\n          ', '\n         </div>\n         <div class="hora">\n         ', '\n         </div>\n         <div class="contenido">\n          ', '\n         </div>\n        </article>\n    ']),
+    _templateObject2 = _taggedTemplateLiteral(['<div class="verifu"></div>'], ['<div class="verifu"></div>']);
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var io = require('socket.io-client');
-window.io = io;
-var socket = io.connect('http://tachira.herokuapp.com');
+var io = window.io = require('socket.io-client');
 var yo = require('yo-yo');
-window.$ = require('jquery');
-
+var $ = window.$ = require('jquery');
+var bufer = [[], []];
 var references = [[], []];
+// const socket = io.connect('localhost:80');
+var socket = io.connect('http://tachira.herokuapp.com:80');
 
 // if (!window.Intl) {
 //     window.Intl = require('intl'); // polyfill for `Intl`
@@ -20475,47 +20474,60 @@ require('intl-relativeformat/dist/locale-data/es.js');
 var rf = new IntlRelativeFormat('es');
 
 function append(item) {
-  var spiner = yo(_templateObject);
   var a = document.getElementsByClassName('tweetBox')[0];
   a.insertBefore(item, document.getElementsByClassName('tweets')[0]);
 }
 
 function template(data) {
-  var set = yo(_templateObject2, data.user.name, data.user.screen_name, data.user.verified ? yo(_templateObject3) : '', new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)), data.text);
+  var set = yo(_templateObject, data.user.name, data.user.screen_name, data.user.verified ? yo(_templateObject2) : '', new Date(data.created_at) > new Date() ? rf.format(new Date()) : rf.format(new Date(data.created_at)), data.text);
   references[0].push(set); //dom
   references[1].push(data); // object data
   return set;
 }
 
-function UPDATE() {
+function removeLoader() {
+  document.getElementsByClassName('spinner')[0].remove();
+}
 
+function UPDATE() {
   references[0].forEach(function (item, index) {
     yo.update(item, template(references[1][index]));
   });
-
-  if (references[0].length > 23) {
-    references[0].slice(23).forEach(function (item) {
-      item.remove();
-    });
-
-    references[0] = references[0].slice(0, 23);
-    references[1] = references[1].slice(0, 23);
-  }
 }
 
-console.log('load docump');
+function addToBufer(data) {
+  var item = document.getElementsByClassName('mNum')[0];
+  item.textContent = parseInt(item.textContent) + 1;
+  bufer[0].push(template(data));
+  bufer[1].push(data);
+}
 
-socket.on('tweet', function (data) {
-  // console.log(data)
-  console.log('add');
-  UPDATE();
-  append(template(data));
+$('document').ready(function () {
+  console.log('open port, document ready');
+
+  removeLoader();
+
+  socket.on('tweet', function (data) {
+    UPDATE();
+    addToBufer(data);
+  });
+
+  socket.on('err', function (data) {
+    alert('Oh no!, Oops porfas reporta este problema!');
+  });
+
+  $('.gMore').on('click', function () {
+    if (bufer[0].length > 0) {
+      bufer[0].forEach(function (item, index) {
+        append(item);
+        references[0].push(item);
+        references[1].push(bufer[1][index]);
+      });
+
+      bufer = [[], []];
+      document.getElementsByClassName('mNum')[0].textContent = '0';
+    }
+  });
 });
-
-socket.on('err', function (data) {
-  alert('Oh no!, Oops porfas reporta este problema!');
-});
-
-// setInterval(UPDATE,2500)
 
 },{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);
