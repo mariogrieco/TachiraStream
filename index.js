@@ -27,12 +27,9 @@ var t = new Twitter({
 //     token_secret: conf.ACCESS_TOKEN_SECRET
 // })
 
-app.get('/', function (req, res) {
-  res.render('index')
-})
-
 t.track('tachira')
 t.track('sancristobal')
+t.track('app30jtachira')
 
 io.on('connection', function (socket) {
     
@@ -44,5 +41,9 @@ io.on('connection', function (socket) {
         socket.emit('err', err)
     })
 });
+
+app.get('*', function (req, res) {
+  res.render('index')
+})
 
 server.listen(app.get('port'));
