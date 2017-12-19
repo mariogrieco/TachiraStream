@@ -1,5 +1,5 @@
 // server
-const socket = require('socket.io-client')('http://tachira.herokuapp.com');
+const socket = require('socket.io-client')('https://tachira.herokuapp.com');
 
 //localhost
 // const socket = require('socket.io-client')('...');

@@ -370,7 +370,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"global/document":27,"hyperx":32,"on-load":54}],6:[function(require,module,exports){
+},{"global/document":25,"hyperx":31,"on-load":53}],6:[function(require,module,exports){
 (function (global){
 /**
  * Create a blob builder even when vendor prefixes exist
@@ -473,192 +473,6 @@ module.exports = (function() {
 },{}],7:[function(require,module,exports){
 
 },{}],8:[function(require,module,exports){
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],9:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -683,7 +497,7 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -848,7 +662,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -856,7 +670,7 @@ module.exports = function(a, b){
   a.prototype = new fn;
   a.prototype.constructor = a;
 };
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -900,20 +714,20 @@ function useColors() {
   // NB: In an Electron preload script, document will be defined but not fully
   // initialized. Since we know we're in Chrome, we'll just detect this case
   // explicitly
-  if (window && window.process && window.process.type === 'renderer') {
+  if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
     return true;
   }
 
   // is webkit? http://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return (document && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+  return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
-    (window && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
+    (typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
     // is firefox >= v31?
     // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
     // double check webkit in userAgent just in case we are in a worker
-    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
 }
 
 /**
@@ -1045,7 +859,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":13,"_process":8}],13:[function(require,module,exports){
+},{"./debug":12,"_process":56}],12:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -1249,11 +1063,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":53}],14:[function(require,module,exports){
-
-module.exports = require('./lib/index');
-
-},{"./lib/index":15}],15:[function(require,module,exports){
+},{"ms":51}],13:[function(require,module,exports){
 
 module.exports = require('./socket');
 
@@ -1265,7 +1075,7 @@ module.exports = require('./socket');
  */
 module.exports.parser = require('engine.io-parser');
 
-},{"./socket":16,"engine.io-parser":24}],16:[function(require,module,exports){
+},{"./socket":14,"engine.io-parser":22}],14:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -1277,7 +1087,6 @@ var debug = require('debug')('engine.io-client:socket');
 var index = require('indexof');
 var parser = require('engine.io-parser');
 var parseuri = require('parseuri');
-var parsejson = require('parsejson');
 var parseqs = require('parseqs');
 
 /**
@@ -1708,7 +1517,7 @@ Socket.prototype.onPacket = function (packet) {
 
     switch (packet.type) {
       case 'open':
-        this.onHandshake(parsejson(packet.data));
+        this.onHandshake(JSON.parse(packet.data));
         break;
 
       case 'pong':
@@ -2013,7 +1822,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":17,"./transports/index":18,"component-emitter":10,"debug":12,"engine.io-parser":24,"indexof":33,"parsejson":55,"parseqs":56,"parseuri":57}],17:[function(require,module,exports){
+},{"./transport":15,"./transports/index":16,"component-emitter":9,"debug":11,"engine.io-parser":22,"indexof":32,"parseqs":54,"parseuri":55}],15:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2172,7 +1981,7 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
-},{"component-emitter":10,"engine.io-parser":24}],18:[function(require,module,exports){
+},{"component-emitter":9,"engine.io-parser":22}],16:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies
@@ -2229,7 +2038,7 @@ function polling (opts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":19,"./polling-xhr":20,"./websocket":22,"xmlhttprequest-ssl":23}],19:[function(require,module,exports){
+},{"./polling-jsonp":17,"./polling-xhr":18,"./websocket":20,"xmlhttprequest-ssl":21}],17:[function(require,module,exports){
 (function (global){
 
 /**
@@ -2464,7 +2273,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":21,"component-inherit":11}],20:[function(require,module,exports){
+},{"./polling":19,"component-inherit":10}],18:[function(require,module,exports){
 (function (global){
 /**
  * Module requirements.
@@ -2881,7 +2690,7 @@ function unloadHandler () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":21,"component-emitter":10,"component-inherit":11,"debug":12,"xmlhttprequest-ssl":23}],21:[function(require,module,exports){
+},{"./polling":19,"component-emitter":9,"component-inherit":10,"debug":11,"xmlhttprequest-ssl":21}],19:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -3128,7 +2937,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":17,"component-inherit":11,"debug":12,"engine.io-parser":24,"parseqs":56,"xmlhttprequest-ssl":23,"yeast":67}],22:[function(require,module,exports){
+},{"../transport":15,"component-inherit":10,"debug":11,"engine.io-parser":22,"parseqs":54,"xmlhttprequest-ssl":21,"yeast":67}],20:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -3418,7 +3227,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":17,"component-inherit":11,"debug":12,"engine.io-parser":24,"parseqs":56,"ws":7,"yeast":67}],23:[function(require,module,exports){
+},{"../transport":15,"component-inherit":10,"debug":11,"engine.io-parser":22,"parseqs":54,"ws":7,"yeast":67}],21:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -3459,7 +3268,7 @@ module.exports = function (opts) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":30}],24:[function(require,module,exports){
+},{"has-cors":29}],22:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -4069,7 +3878,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":25,"./utf8":26,"after":1,"arraybuffer.slice":2,"base64-arraybuffer":4,"blob":6,"has-binary2":29}],25:[function(require,module,exports){
+},{"./keys":23,"./utf8":24,"after":1,"arraybuffer.slice":2,"base64-arraybuffer":4,"blob":6,"has-binary2":27}],23:[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -4090,7 +3899,7 @@ module.exports = Object.keys || function keys (obj){
   return arr;
 };
 
-},{}],26:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
@@ -4349,7 +4158,7 @@ module.exports = Object.keys || function keys (obj){
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -4370,7 +4179,7 @@ if (typeof document !== 'undefined') {
 module.exports = doccy;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":7}],28:[function(require,module,exports){
+},{"min-document":7}],26:[function(require,module,exports){
 (function (global){
 var win;
 
@@ -4387,7 +4196,7 @@ if (typeof window !== "undefined") {
 module.exports = win;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],29:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (global){
 /* global Blob File */
 
@@ -4453,7 +4262,14 @@ function hasBinary (obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"isarray":50}],30:[function(require,module,exports){
+},{"isarray":28}],28:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],29:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -4472,7 +4288,7 @@ try {
   module.exports = false;
 }
 
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -4493,7 +4309,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -4571,17 +4387,20 @@ module.exports = function (h, opts) {
         for (; i < parts.length; i++) {
           if (parts[i][0] === ATTR_VALUE || parts[i][0] === ATTR_KEY) {
             if (!cur[1][key]) cur[1][key] = strfn(parts[i][1])
-            else cur[1][key] = concat(cur[1][key], parts[i][1])
+            else parts[i][1]==="" || (cur[1][key] = concat(cur[1][key], parts[i][1]));
           } else if (parts[i][0] === VAR
           && (parts[i][1] === ATTR_VALUE || parts[i][1] === ATTR_KEY)) {
             if (!cur[1][key]) cur[1][key] = strfn(parts[i][2])
-            else cur[1][key] = concat(cur[1][key], parts[i][2])
+            else parts[i][2]==="" || (cur[1][key] = concat(cur[1][key], parts[i][2]));
           } else {
             if (key.length && !cur[1][key] && i === j
             && (parts[i][0] === CLOSE || parts[i][0] === ATTR_BREAK)) {
               // https://html.spec.whatwg.org/multipage/infrastructure.html#boolean-attributes
               // empty string is falsy, not well behaved value in browser
               cur[1][key] = key.toLowerCase()
+            }
+            if (parts[i][0] === CLOSE) {
+              i--
             }
             break
           }
@@ -4773,7 +4592,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":31}],33:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":30}],32:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -4784,20 +4603,22 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 exports = module.exports = require('./lib/parser')['default'];
 exports['default'] = exports;
 
-},{"./lib/parser":35}],35:[function(require,module,exports){
+},{"./lib/parser":34}],34:[function(require,module,exports){
 "use strict";
 
 exports["default"] = (function() {
+  "use strict";
+
   /*
-   * Generated by PEG.js 0.8.0.
+   * Generated by PEG.js 0.9.0.
    *
-   * http://pegjs.majda.cz/
+   * http://pegjs.org/
    */
 
   function peg$subclass(child, parent) {
@@ -4806,36 +4627,37 @@ exports["default"] = (function() {
     child.prototype = new ctor();
   }
 
-  function SyntaxError(message, expected, found, offset, line, column) {
+  function peg$SyntaxError(message, expected, found, location) {
     this.message  = message;
     this.expected = expected;
     this.found    = found;
-    this.offset   = offset;
-    this.line     = line;
-    this.column   = column;
-
+    this.location = location;
     this.name     = "SyntaxError";
+
+    if (typeof Error.captureStackTrace === "function") {
+      Error.captureStackTrace(this, peg$SyntaxError);
+    }
   }
 
-  peg$subclass(SyntaxError, Error);
+  peg$subclass(peg$SyntaxError, Error);
 
-  function parse(input) {
+  function peg$parse(input) {
     var options = arguments.length > 1 ? arguments[1] : {},
+        parser  = this,
 
         peg$FAILED = {},
 
         peg$startRuleFunctions = { start: peg$parsestart },
         peg$startRuleFunction  = peg$parsestart,
 
-        peg$c0 = [],
-        peg$c1 = function(elements) {
+        peg$c0 = function(elements) {
                 return {
                     type    : 'messageFormatPattern',
-                    elements: elements
+                    elements: elements,
+                    location: location()
                 };
             },
-        peg$c2 = peg$FAILED,
-        peg$c3 = function(text) {
+        peg$c1 = function(text) {
                 var string = '',
                     i, j, outerLen, inner, innerLen;
 
@@ -4849,129 +4671,135 @@ exports["default"] = (function() {
 
                 return string;
             },
-        peg$c4 = function(messageText) {
+        peg$c2 = function(messageText) {
                 return {
                     type : 'messageTextElement',
-                    value: messageText
+                    value: messageText,
+                    location: location()
                 };
             },
-        peg$c5 = /^[^ \t\n\r,.+={}#]/,
-        peg$c6 = { type: "class", value: "[^ \\t\\n\\r,.+={}#]", description: "[^ \\t\\n\\r,.+={}#]" },
-        peg$c7 = "{",
-        peg$c8 = { type: "literal", value: "{", description: "\"{\"" },
-        peg$c9 = null,
-        peg$c10 = ",",
-        peg$c11 = { type: "literal", value: ",", description: "\",\"" },
-        peg$c12 = "}",
-        peg$c13 = { type: "literal", value: "}", description: "\"}\"" },
-        peg$c14 = function(id, format) {
+        peg$c3 = /^[^ \t\n\r,.+={}#]/,
+        peg$c4 = { type: "class", value: "[^ \\t\\n\\r,.+={}#]", description: "[^ \\t\\n\\r,.+={}#]" },
+        peg$c5 = "{",
+        peg$c6 = { type: "literal", value: "{", description: "\"{\"" },
+        peg$c7 = ",",
+        peg$c8 = { type: "literal", value: ",", description: "\",\"" },
+        peg$c9 = "}",
+        peg$c10 = { type: "literal", value: "}", description: "\"}\"" },
+        peg$c11 = function(id, format) {
                 return {
                     type  : 'argumentElement',
                     id    : id,
-                    format: format && format[2]
+                    format: format && format[2],
+                    location: location()
                 };
             },
-        peg$c15 = "number",
-        peg$c16 = { type: "literal", value: "number", description: "\"number\"" },
-        peg$c17 = "date",
-        peg$c18 = { type: "literal", value: "date", description: "\"date\"" },
-        peg$c19 = "time",
-        peg$c20 = { type: "literal", value: "time", description: "\"time\"" },
-        peg$c21 = function(type, style) {
+        peg$c12 = "number",
+        peg$c13 = { type: "literal", value: "number", description: "\"number\"" },
+        peg$c14 = "date",
+        peg$c15 = { type: "literal", value: "date", description: "\"date\"" },
+        peg$c16 = "time",
+        peg$c17 = { type: "literal", value: "time", description: "\"time\"" },
+        peg$c18 = function(type, style) {
                 return {
                     type : type + 'Format',
-                    style: style && style[2]
+                    style: style && style[2],
+                    location: location()
                 };
             },
-        peg$c22 = "plural",
-        peg$c23 = { type: "literal", value: "plural", description: "\"plural\"" },
-        peg$c24 = function(pluralStyle) {
+        peg$c19 = "plural",
+        peg$c20 = { type: "literal", value: "plural", description: "\"plural\"" },
+        peg$c21 = function(pluralStyle) {
                 return {
                     type   : pluralStyle.type,
                     ordinal: false,
                     offset : pluralStyle.offset || 0,
-                    options: pluralStyle.options
+                    options: pluralStyle.options,
+                    location: location()
                 };
             },
-        peg$c25 = "selectordinal",
-        peg$c26 = { type: "literal", value: "selectordinal", description: "\"selectordinal\"" },
-        peg$c27 = function(pluralStyle) {
+        peg$c22 = "selectordinal",
+        peg$c23 = { type: "literal", value: "selectordinal", description: "\"selectordinal\"" },
+        peg$c24 = function(pluralStyle) {
                 return {
                     type   : pluralStyle.type,
                     ordinal: true,
                     offset : pluralStyle.offset || 0,
-                    options: pluralStyle.options
+                    options: pluralStyle.options,
+                    location: location()
                 }
             },
-        peg$c28 = "select",
-        peg$c29 = { type: "literal", value: "select", description: "\"select\"" },
-        peg$c30 = function(options) {
+        peg$c25 = "select",
+        peg$c26 = { type: "literal", value: "select", description: "\"select\"" },
+        peg$c27 = function(options) {
                 return {
                     type   : 'selectFormat',
-                    options: options
+                    options: options,
+                    location: location()
                 };
             },
-        peg$c31 = "=",
-        peg$c32 = { type: "literal", value: "=", description: "\"=\"" },
-        peg$c33 = function(selector, pattern) {
+        peg$c28 = "=",
+        peg$c29 = { type: "literal", value: "=", description: "\"=\"" },
+        peg$c30 = function(selector, pattern) {
                 return {
                     type    : 'optionalFormatPattern',
                     selector: selector,
-                    value   : pattern
+                    value   : pattern,
+                    location: location()
                 };
             },
-        peg$c34 = "offset:",
-        peg$c35 = { type: "literal", value: "offset:", description: "\"offset:\"" },
-        peg$c36 = function(number) {
+        peg$c31 = "offset:",
+        peg$c32 = { type: "literal", value: "offset:", description: "\"offset:\"" },
+        peg$c33 = function(number) {
                 return number;
             },
-        peg$c37 = function(offset, options) {
+        peg$c34 = function(offset, options) {
                 return {
                     type   : 'pluralFormat',
                     offset : offset,
-                    options: options
+                    options: options,
+                    location: location()
                 };
             },
-        peg$c38 = { type: "other", description: "whitespace" },
-        peg$c39 = /^[ \t\n\r]/,
-        peg$c40 = { type: "class", value: "[ \\t\\n\\r]", description: "[ \\t\\n\\r]" },
-        peg$c41 = { type: "other", description: "optionalWhitespace" },
-        peg$c42 = /^[0-9]/,
-        peg$c43 = { type: "class", value: "[0-9]", description: "[0-9]" },
-        peg$c44 = /^[0-9a-f]/i,
-        peg$c45 = { type: "class", value: "[0-9a-f]i", description: "[0-9a-f]i" },
-        peg$c46 = "0",
-        peg$c47 = { type: "literal", value: "0", description: "\"0\"" },
-        peg$c48 = /^[1-9]/,
-        peg$c49 = { type: "class", value: "[1-9]", description: "[1-9]" },
-        peg$c50 = function(digits) {
+        peg$c35 = { type: "other", description: "whitespace" },
+        peg$c36 = /^[ \t\n\r]/,
+        peg$c37 = { type: "class", value: "[ \\t\\n\\r]", description: "[ \\t\\n\\r]" },
+        peg$c38 = { type: "other", description: "optionalWhitespace" },
+        peg$c39 = /^[0-9]/,
+        peg$c40 = { type: "class", value: "[0-9]", description: "[0-9]" },
+        peg$c41 = /^[0-9a-f]/i,
+        peg$c42 = { type: "class", value: "[0-9a-f]i", description: "[0-9a-f]i" },
+        peg$c43 = "0",
+        peg$c44 = { type: "literal", value: "0", description: "\"0\"" },
+        peg$c45 = /^[1-9]/,
+        peg$c46 = { type: "class", value: "[1-9]", description: "[1-9]" },
+        peg$c47 = function(digits) {
             return parseInt(digits, 10);
         },
-        peg$c51 = /^[^{}\\\0-\x1F \t\n\r]/,
-        peg$c52 = { type: "class", value: "[^{}\\\\\\0-\\x1F \\t\\n\\r]", description: "[^{}\\\\\\0-\\x1F \\t\\n\\r]" },
-        peg$c53 = "\\\\",
-        peg$c54 = { type: "literal", value: "\\\\", description: "\"\\\\\\\\\"" },
-        peg$c55 = function() { return '\\'; },
-        peg$c56 = "\\#",
-        peg$c57 = { type: "literal", value: "\\#", description: "\"\\\\#\"" },
-        peg$c58 = function() { return '\\#'; },
-        peg$c59 = "\\{",
-        peg$c60 = { type: "literal", value: "\\{", description: "\"\\\\{\"" },
-        peg$c61 = function() { return '\u007B'; },
-        peg$c62 = "\\}",
-        peg$c63 = { type: "literal", value: "\\}", description: "\"\\\\}\"" },
-        peg$c64 = function() { return '\u007D'; },
-        peg$c65 = "\\u",
-        peg$c66 = { type: "literal", value: "\\u", description: "\"\\\\u\"" },
-        peg$c67 = function(digits) {
+        peg$c48 = /^[^{}\\\0-\x1F \t\n\r]/,
+        peg$c49 = { type: "class", value: "[^{}\\\\\\0-\\x1F\\x7f \\t\\n\\r]", description: "[^{}\\\\\\0-\\x1F\\x7f \\t\\n\\r]" },
+        peg$c50 = "\\\\",
+        peg$c51 = { type: "literal", value: "\\\\", description: "\"\\\\\\\\\"" },
+        peg$c52 = function() { return '\\'; },
+        peg$c53 = "\\#",
+        peg$c54 = { type: "literal", value: "\\#", description: "\"\\\\#\"" },
+        peg$c55 = function() { return '\\#'; },
+        peg$c56 = "\\{",
+        peg$c57 = { type: "literal", value: "\\{", description: "\"\\\\{\"" },
+        peg$c58 = function() { return '\u007B'; },
+        peg$c59 = "\\}",
+        peg$c60 = { type: "literal", value: "\\}", description: "\"\\\\}\"" },
+        peg$c61 = function() { return '\u007D'; },
+        peg$c62 = "\\u",
+        peg$c63 = { type: "literal", value: "\\u", description: "\"\\\\u\"" },
+        peg$c64 = function(digits) {
                 return String.fromCharCode(parseInt(digits, 16));
             },
-        peg$c68 = function(chars) { return chars.join(''); },
+        peg$c65 = function(chars) { return chars.join(''); },
 
         peg$currPos          = 0,
-        peg$reportedPos      = 0,
-        peg$cachedPos        = 0,
-        peg$cachedPosDetails = { line: 1, column: 1, seenCR: false },
+        peg$savedPos         = 0,
+        peg$posDetailsCache  = [{ line: 1, column: 1, seenCR: false }],
         peg$maxFailPos       = 0,
         peg$maxFailExpected  = [],
         peg$silentFails      = 0,
@@ -4987,38 +4815,51 @@ exports["default"] = (function() {
     }
 
     function text() {
-      return input.substring(peg$reportedPos, peg$currPos);
+      return input.substring(peg$savedPos, peg$currPos);
     }
 
-    function offset() {
-      return peg$reportedPos;
-    }
-
-    function line() {
-      return peg$computePosDetails(peg$reportedPos).line;
-    }
-
-    function column() {
-      return peg$computePosDetails(peg$reportedPos).column;
+    function location() {
+      return peg$computeLocation(peg$savedPos, peg$currPos);
     }
 
     function expected(description) {
       throw peg$buildException(
         null,
         [{ type: "other", description: description }],
-        peg$reportedPos
+        input.substring(peg$savedPos, peg$currPos),
+        peg$computeLocation(peg$savedPos, peg$currPos)
       );
     }
 
     function error(message) {
-      throw peg$buildException(message, null, peg$reportedPos);
+      throw peg$buildException(
+        message,
+        null,
+        input.substring(peg$savedPos, peg$currPos),
+        peg$computeLocation(peg$savedPos, peg$currPos)
+      );
     }
 
     function peg$computePosDetails(pos) {
-      function advance(details, startPos, endPos) {
-        var p, ch;
+      var details = peg$posDetailsCache[pos],
+          p, ch;
 
-        for (p = startPos; p < endPos; p++) {
+      if (details) {
+        return details;
+      } else {
+        p = pos - 1;
+        while (!peg$posDetailsCache[p]) {
+          p--;
+        }
+
+        details = peg$posDetailsCache[p];
+        details = {
+          line:   details.line,
+          column: details.column,
+          seenCR: details.seenCR
+        };
+
+        while (p < pos) {
           ch = input.charAt(p);
           if (ch === "\n") {
             if (!details.seenCR) { details.line++; }
@@ -5032,19 +4873,31 @@ exports["default"] = (function() {
             details.column++;
             details.seenCR = false;
           }
-        }
-      }
 
-      if (peg$cachedPos !== pos) {
-        if (peg$cachedPos > pos) {
-          peg$cachedPos = 0;
-          peg$cachedPosDetails = { line: 1, column: 1, seenCR: false };
+          p++;
         }
-        advance(peg$cachedPosDetails, peg$cachedPos, pos);
-        peg$cachedPos = pos;
-      }
 
-      return peg$cachedPosDetails;
+        peg$posDetailsCache[pos] = details;
+        return details;
+      }
+    }
+
+    function peg$computeLocation(startPos, endPos) {
+      var startPosDetails = peg$computePosDetails(startPos),
+          endPosDetails   = peg$computePosDetails(endPos);
+
+      return {
+        start: {
+          offset: startPos,
+          line:   startPosDetails.line,
+          column: startPosDetails.column
+        },
+        end: {
+          offset: endPos,
+          line:   endPosDetails.line,
+          column: endPosDetails.column
+        }
+      };
     }
 
     function peg$fail(expected) {
@@ -5058,7 +4911,7 @@ exports["default"] = (function() {
       peg$maxFailExpected.push(expected);
     }
 
-    function peg$buildException(message, expected, pos) {
+    function peg$buildException(message, expected, found, location) {
       function cleanupExpected(expected) {
         var i = 1;
 
@@ -5095,8 +4948,8 @@ exports["default"] = (function() {
             .replace(/\r/g,   '\\r')
             .replace(/[\x00-\x07\x0B\x0E\x0F]/g, function(ch) { return '\\x0' + hex(ch); })
             .replace(/[\x10-\x1F\x80-\xFF]/g,    function(ch) { return '\\x'  + hex(ch); })
-            .replace(/[\u0180-\u0FFF]/g,         function(ch) { return '\\u0' + hex(ch); })
-            .replace(/[\u1080-\uFFFF]/g,         function(ch) { return '\\u'  + hex(ch); });
+            .replace(/[\u0100-\u0FFF]/g,         function(ch) { return '\\u0' + hex(ch); })
+            .replace(/[\u1000-\uFFFF]/g,         function(ch) { return '\\u'  + hex(ch); });
         }
 
         var expectedDescs = new Array(expected.length),
@@ -5117,20 +4970,15 @@ exports["default"] = (function() {
         return "Expected " + expectedDesc + " but " + foundDesc + " found.";
       }
 
-      var posDetails = peg$computePosDetails(pos),
-          found      = pos < input.length ? input.charAt(pos) : null;
-
       if (expected !== null) {
         cleanupExpected(expected);
       }
 
-      return new SyntaxError(
+      return new peg$SyntaxError(
         message !== null ? message : buildMessage(expected, found),
         expected,
         found,
-        pos,
-        posDetails.line,
-        posDetails.column
+        location
       );
     }
 
@@ -5153,8 +5001,8 @@ exports["default"] = (function() {
         s2 = peg$parsemessageFormatElement();
       }
       if (s1 !== peg$FAILED) {
-        peg$reportedPos = s0;
-        s1 = peg$c1(s1);
+        peg$savedPos = s0;
+        s1 = peg$c0(s1);
       }
       s0 = s1;
 
@@ -5188,15 +5036,15 @@ exports["default"] = (function() {
             s2 = s3;
           } else {
             peg$currPos = s2;
-            s2 = peg$c2;
+            s2 = peg$FAILED;
           }
         } else {
           peg$currPos = s2;
-          s2 = peg$c2;
+          s2 = peg$FAILED;
         }
       } else {
         peg$currPos = s2;
-        s2 = peg$c2;
+        s2 = peg$FAILED;
       }
       if (s2 !== peg$FAILED) {
         while (s2 !== peg$FAILED) {
@@ -5212,32 +5060,33 @@ exports["default"] = (function() {
                 s2 = s3;
               } else {
                 peg$currPos = s2;
-                s2 = peg$c2;
+                s2 = peg$FAILED;
               }
             } else {
               peg$currPos = s2;
-              s2 = peg$c2;
+              s2 = peg$FAILED;
             }
           } else {
             peg$currPos = s2;
-            s2 = peg$c2;
+            s2 = peg$FAILED;
           }
         }
       } else {
-        s1 = peg$c2;
+        s1 = peg$FAILED;
       }
       if (s1 !== peg$FAILED) {
-        peg$reportedPos = s0;
-        s1 = peg$c3(s1);
+        peg$savedPos = s0;
+        s1 = peg$c1(s1);
       }
       s0 = s1;
       if (s0 === peg$FAILED) {
         s0 = peg$currPos;
         s1 = peg$parsews();
         if (s1 !== peg$FAILED) {
-          s1 = input.substring(s0, peg$currPos);
+          s0 = input.substring(s0, peg$currPos);
+        } else {
+          s0 = s1;
         }
-        s0 = s1;
       }
 
       return s0;
@@ -5249,8 +5098,8 @@ exports["default"] = (function() {
       s0 = peg$currPos;
       s1 = peg$parsemessageText();
       if (s1 !== peg$FAILED) {
-        peg$reportedPos = s0;
-        s1 = peg$c4(s1);
+        peg$savedPos = s0;
+        s1 = peg$c2(s1);
       }
       s0 = s1;
 
@@ -5264,31 +5113,32 @@ exports["default"] = (function() {
       if (s0 === peg$FAILED) {
         s0 = peg$currPos;
         s1 = [];
-        if (peg$c5.test(input.charAt(peg$currPos))) {
+        if (peg$c3.test(input.charAt(peg$currPos))) {
           s2 = input.charAt(peg$currPos);
           peg$currPos++;
         } else {
           s2 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c6); }
+          if (peg$silentFails === 0) { peg$fail(peg$c4); }
         }
         if (s2 !== peg$FAILED) {
           while (s2 !== peg$FAILED) {
             s1.push(s2);
-            if (peg$c5.test(input.charAt(peg$currPos))) {
+            if (peg$c3.test(input.charAt(peg$currPos))) {
               s2 = input.charAt(peg$currPos);
               peg$currPos++;
             } else {
               s2 = peg$FAILED;
-              if (peg$silentFails === 0) { peg$fail(peg$c6); }
+              if (peg$silentFails === 0) { peg$fail(peg$c4); }
             }
           }
         } else {
-          s1 = peg$c2;
+          s1 = peg$FAILED;
         }
         if (s1 !== peg$FAILED) {
-          s1 = input.substring(s0, peg$currPos);
+          s0 = input.substring(s0, peg$currPos);
+        } else {
+          s0 = s1;
         }
-        s0 = s1;
       }
 
       return s0;
@@ -5299,11 +5149,11 @@ exports["default"] = (function() {
 
       s0 = peg$currPos;
       if (input.charCodeAt(peg$currPos) === 123) {
-        s1 = peg$c7;
+        s1 = peg$c5;
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c8); }
+        if (peg$silentFails === 0) { peg$fail(peg$c6); }
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
@@ -5314,11 +5164,11 @@ exports["default"] = (function() {
             if (s4 !== peg$FAILED) {
               s5 = peg$currPos;
               if (input.charCodeAt(peg$currPos) === 44) {
-                s6 = peg$c10;
+                s6 = peg$c7;
                 peg$currPos++;
               } else {
                 s6 = peg$FAILED;
-                if (peg$silentFails === 0) { peg$fail(peg$c11); }
+                if (peg$silentFails === 0) { peg$fail(peg$c8); }
               }
               if (s6 !== peg$FAILED) {
                 s7 = peg$parse_();
@@ -5329,60 +5179,60 @@ exports["default"] = (function() {
                     s5 = s6;
                   } else {
                     peg$currPos = s5;
-                    s5 = peg$c2;
+                    s5 = peg$FAILED;
                   }
                 } else {
                   peg$currPos = s5;
-                  s5 = peg$c2;
+                  s5 = peg$FAILED;
                 }
               } else {
                 peg$currPos = s5;
-                s5 = peg$c2;
+                s5 = peg$FAILED;
               }
               if (s5 === peg$FAILED) {
-                s5 = peg$c9;
+                s5 = null;
               }
               if (s5 !== peg$FAILED) {
                 s6 = peg$parse_();
                 if (s6 !== peg$FAILED) {
                   if (input.charCodeAt(peg$currPos) === 125) {
-                    s7 = peg$c12;
+                    s7 = peg$c9;
                     peg$currPos++;
                   } else {
                     s7 = peg$FAILED;
-                    if (peg$silentFails === 0) { peg$fail(peg$c13); }
+                    if (peg$silentFails === 0) { peg$fail(peg$c10); }
                   }
                   if (s7 !== peg$FAILED) {
-                    peg$reportedPos = s0;
-                    s1 = peg$c14(s3, s5);
+                    peg$savedPos = s0;
+                    s1 = peg$c11(s3, s5);
                     s0 = s1;
                   } else {
                     peg$currPos = s0;
-                    s0 = peg$c2;
+                    s0 = peg$FAILED;
                   }
                 } else {
                   peg$currPos = s0;
-                  s0 = peg$c2;
+                  s0 = peg$FAILED;
                 }
               } else {
                 peg$currPos = s0;
-                s0 = peg$c2;
+                s0 = peg$FAILED;
               }
             } else {
               peg$currPos = s0;
-              s0 = peg$c2;
+              s0 = peg$FAILED;
             }
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5409,28 +5259,28 @@ exports["default"] = (function() {
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
-      if (input.substr(peg$currPos, 6) === peg$c15) {
-        s1 = peg$c15;
+      if (input.substr(peg$currPos, 6) === peg$c12) {
+        s1 = peg$c12;
         peg$currPos += 6;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c16); }
+        if (peg$silentFails === 0) { peg$fail(peg$c13); }
       }
       if (s1 === peg$FAILED) {
-        if (input.substr(peg$currPos, 4) === peg$c17) {
-          s1 = peg$c17;
+        if (input.substr(peg$currPos, 4) === peg$c14) {
+          s1 = peg$c14;
           peg$currPos += 4;
         } else {
           s1 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c18); }
+          if (peg$silentFails === 0) { peg$fail(peg$c15); }
         }
         if (s1 === peg$FAILED) {
-          if (input.substr(peg$currPos, 4) === peg$c19) {
-            s1 = peg$c19;
+          if (input.substr(peg$currPos, 4) === peg$c16) {
+            s1 = peg$c16;
             peg$currPos += 4;
           } else {
             s1 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c20); }
+            if (peg$silentFails === 0) { peg$fail(peg$c17); }
           }
         }
       }
@@ -5439,11 +5289,11 @@ exports["default"] = (function() {
         if (s2 !== peg$FAILED) {
           s3 = peg$currPos;
           if (input.charCodeAt(peg$currPos) === 44) {
-            s4 = peg$c10;
+            s4 = peg$c7;
             peg$currPos++;
           } else {
             s4 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c11); }
+            if (peg$silentFails === 0) { peg$fail(peg$c8); }
           }
           if (s4 !== peg$FAILED) {
             s5 = peg$parse_();
@@ -5454,34 +5304,34 @@ exports["default"] = (function() {
                 s3 = s4;
               } else {
                 peg$currPos = s3;
-                s3 = peg$c2;
+                s3 = peg$FAILED;
               }
             } else {
               peg$currPos = s3;
-              s3 = peg$c2;
+              s3 = peg$FAILED;
             }
           } else {
             peg$currPos = s3;
-            s3 = peg$c2;
+            s3 = peg$FAILED;
           }
           if (s3 === peg$FAILED) {
-            s3 = peg$c9;
+            s3 = null;
           }
           if (s3 !== peg$FAILED) {
-            peg$reportedPos = s0;
-            s1 = peg$c21(s1, s3);
+            peg$savedPos = s0;
+            s1 = peg$c18(s1, s3);
             s0 = s1;
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5491,50 +5341,50 @@ exports["default"] = (function() {
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
-      if (input.substr(peg$currPos, 6) === peg$c22) {
-        s1 = peg$c22;
+      if (input.substr(peg$currPos, 6) === peg$c19) {
+        s1 = peg$c19;
         peg$currPos += 6;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c23); }
+        if (peg$silentFails === 0) { peg$fail(peg$c20); }
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
         if (s2 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 44) {
-            s3 = peg$c10;
+            s3 = peg$c7;
             peg$currPos++;
           } else {
             s3 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c11); }
+            if (peg$silentFails === 0) { peg$fail(peg$c8); }
           }
           if (s3 !== peg$FAILED) {
             s4 = peg$parse_();
             if (s4 !== peg$FAILED) {
               s5 = peg$parsepluralStyle();
               if (s5 !== peg$FAILED) {
-                peg$reportedPos = s0;
-                s1 = peg$c24(s5);
+                peg$savedPos = s0;
+                s1 = peg$c21(s5);
                 s0 = s1;
               } else {
                 peg$currPos = s0;
-                s0 = peg$c2;
+                s0 = peg$FAILED;
               }
             } else {
               peg$currPos = s0;
-              s0 = peg$c2;
+              s0 = peg$FAILED;
             }
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5544,50 +5394,50 @@ exports["default"] = (function() {
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
-      if (input.substr(peg$currPos, 13) === peg$c25) {
-        s1 = peg$c25;
+      if (input.substr(peg$currPos, 13) === peg$c22) {
+        s1 = peg$c22;
         peg$currPos += 13;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c26); }
+        if (peg$silentFails === 0) { peg$fail(peg$c23); }
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
         if (s2 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 44) {
-            s3 = peg$c10;
+            s3 = peg$c7;
             peg$currPos++;
           } else {
             s3 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c11); }
+            if (peg$silentFails === 0) { peg$fail(peg$c8); }
           }
           if (s3 !== peg$FAILED) {
             s4 = peg$parse_();
             if (s4 !== peg$FAILED) {
               s5 = peg$parsepluralStyle();
               if (s5 !== peg$FAILED) {
-                peg$reportedPos = s0;
-                s1 = peg$c27(s5);
+                peg$savedPos = s0;
+                s1 = peg$c24(s5);
                 s0 = s1;
               } else {
                 peg$currPos = s0;
-                s0 = peg$c2;
+                s0 = peg$FAILED;
               }
             } else {
               peg$currPos = s0;
-              s0 = peg$c2;
+              s0 = peg$FAILED;
             }
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5597,22 +5447,22 @@ exports["default"] = (function() {
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
-      if (input.substr(peg$currPos, 6) === peg$c28) {
-        s1 = peg$c28;
+      if (input.substr(peg$currPos, 6) === peg$c25) {
+        s1 = peg$c25;
         peg$currPos += 6;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c29); }
+        if (peg$silentFails === 0) { peg$fail(peg$c26); }
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
         if (s2 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 44) {
-            s3 = peg$c10;
+            s3 = peg$c7;
             peg$currPos++;
           } else {
             s3 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c11); }
+            if (peg$silentFails === 0) { peg$fail(peg$c8); }
           }
           if (s3 !== peg$FAILED) {
             s4 = peg$parse_();
@@ -5625,31 +5475,31 @@ exports["default"] = (function() {
                   s6 = peg$parseoptionalFormatPattern();
                 }
               } else {
-                s5 = peg$c2;
+                s5 = peg$FAILED;
               }
               if (s5 !== peg$FAILED) {
-                peg$reportedPos = s0;
-                s1 = peg$c30(s5);
+                peg$savedPos = s0;
+                s1 = peg$c27(s5);
                 s0 = s1;
               } else {
                 peg$currPos = s0;
-                s0 = peg$c2;
+                s0 = peg$FAILED;
               }
             } else {
               peg$currPos = s0;
-              s0 = peg$c2;
+              s0 = peg$FAILED;
             }
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5661,11 +5511,11 @@ exports["default"] = (function() {
       s0 = peg$currPos;
       s1 = peg$currPos;
       if (input.charCodeAt(peg$currPos) === 61) {
-        s2 = peg$c31;
+        s2 = peg$c28;
         peg$currPos++;
       } else {
         s2 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c32); }
+        if (peg$silentFails === 0) { peg$fail(peg$c29); }
       }
       if (s2 !== peg$FAILED) {
         s3 = peg$parsenumber();
@@ -5674,16 +5524,17 @@ exports["default"] = (function() {
           s1 = s2;
         } else {
           peg$currPos = s1;
-          s1 = peg$c2;
+          s1 = peg$FAILED;
         }
       } else {
         peg$currPos = s1;
-        s1 = peg$c2;
+        s1 = peg$FAILED;
       }
       if (s1 !== peg$FAILED) {
-        s1 = input.substring(s0, peg$currPos);
+        s0 = input.substring(s0, peg$currPos);
+      } else {
+        s0 = s1;
       }
-      s0 = s1;
       if (s0 === peg$FAILED) {
         s0 = peg$parsechars();
       }
@@ -5702,11 +5553,11 @@ exports["default"] = (function() {
           s3 = peg$parse_();
           if (s3 !== peg$FAILED) {
             if (input.charCodeAt(peg$currPos) === 123) {
-              s4 = peg$c7;
+              s4 = peg$c5;
               peg$currPos++;
             } else {
               s4 = peg$FAILED;
-              if (peg$silentFails === 0) { peg$fail(peg$c8); }
+              if (peg$silentFails === 0) { peg$fail(peg$c6); }
             }
             if (s4 !== peg$FAILED) {
               s5 = peg$parse_();
@@ -5716,47 +5567,47 @@ exports["default"] = (function() {
                   s7 = peg$parse_();
                   if (s7 !== peg$FAILED) {
                     if (input.charCodeAt(peg$currPos) === 125) {
-                      s8 = peg$c12;
+                      s8 = peg$c9;
                       peg$currPos++;
                     } else {
                       s8 = peg$FAILED;
-                      if (peg$silentFails === 0) { peg$fail(peg$c13); }
+                      if (peg$silentFails === 0) { peg$fail(peg$c10); }
                     }
                     if (s8 !== peg$FAILED) {
-                      peg$reportedPos = s0;
-                      s1 = peg$c33(s2, s6);
+                      peg$savedPos = s0;
+                      s1 = peg$c30(s2, s6);
                       s0 = s1;
                     } else {
                       peg$currPos = s0;
-                      s0 = peg$c2;
+                      s0 = peg$FAILED;
                     }
                   } else {
                     peg$currPos = s0;
-                    s0 = peg$c2;
+                    s0 = peg$FAILED;
                   }
                 } else {
                   peg$currPos = s0;
-                  s0 = peg$c2;
+                  s0 = peg$FAILED;
                 }
               } else {
                 peg$currPos = s0;
-                s0 = peg$c2;
+                s0 = peg$FAILED;
               }
             } else {
               peg$currPos = s0;
-              s0 = peg$c2;
+              s0 = peg$FAILED;
             }
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5766,32 +5617,32 @@ exports["default"] = (function() {
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
-      if (input.substr(peg$currPos, 7) === peg$c34) {
-        s1 = peg$c34;
+      if (input.substr(peg$currPos, 7) === peg$c31) {
+        s1 = peg$c31;
         peg$currPos += 7;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c35); }
+        if (peg$silentFails === 0) { peg$fail(peg$c32); }
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
         if (s2 !== peg$FAILED) {
           s3 = peg$parsenumber();
           if (s3 !== peg$FAILED) {
-            peg$reportedPos = s0;
-            s1 = peg$c36(s3);
+            peg$savedPos = s0;
+            s1 = peg$c33(s3);
             s0 = s1;
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5803,7 +5654,7 @@ exports["default"] = (function() {
       s0 = peg$currPos;
       s1 = peg$parseoffset();
       if (s1 === peg$FAILED) {
-        s1 = peg$c9;
+        s1 = null;
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
@@ -5816,23 +5667,23 @@ exports["default"] = (function() {
               s4 = peg$parseoptionalFormatPattern();
             }
           } else {
-            s3 = peg$c2;
+            s3 = peg$FAILED;
           }
           if (s3 !== peg$FAILED) {
-            peg$reportedPos = s0;
-            s1 = peg$c37(s1, s3);
+            peg$savedPos = s0;
+            s1 = peg$c34(s1, s3);
             s0 = s1;
           } else {
             peg$currPos = s0;
-            s0 = peg$c2;
+            s0 = peg$FAILED;
           }
         } else {
           peg$currPos = s0;
-          s0 = peg$c2;
+          s0 = peg$FAILED;
         }
       } else {
         peg$currPos = s0;
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
 
       return s0;
@@ -5843,31 +5694,31 @@ exports["default"] = (function() {
 
       peg$silentFails++;
       s0 = [];
-      if (peg$c39.test(input.charAt(peg$currPos))) {
+      if (peg$c36.test(input.charAt(peg$currPos))) {
         s1 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c40); }
+        if (peg$silentFails === 0) { peg$fail(peg$c37); }
       }
       if (s1 !== peg$FAILED) {
         while (s1 !== peg$FAILED) {
           s0.push(s1);
-          if (peg$c39.test(input.charAt(peg$currPos))) {
+          if (peg$c36.test(input.charAt(peg$currPos))) {
             s1 = input.charAt(peg$currPos);
             peg$currPos++;
           } else {
             s1 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c40); }
+            if (peg$silentFails === 0) { peg$fail(peg$c37); }
           }
         }
       } else {
-        s0 = peg$c2;
+        s0 = peg$FAILED;
       }
       peg$silentFails--;
       if (s0 === peg$FAILED) {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c38); }
+        if (peg$silentFails === 0) { peg$fail(peg$c35); }
       }
 
       return s0;
@@ -5885,13 +5736,14 @@ exports["default"] = (function() {
         s2 = peg$parsews();
       }
       if (s1 !== peg$FAILED) {
-        s1 = input.substring(s0, peg$currPos);
+        s0 = input.substring(s0, peg$currPos);
+      } else {
+        s0 = s1;
       }
-      s0 = s1;
       peg$silentFails--;
       if (s0 === peg$FAILED) {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c41); }
+        if (peg$silentFails === 0) { peg$fail(peg$c38); }
       }
 
       return s0;
@@ -5900,12 +5752,12 @@ exports["default"] = (function() {
     function peg$parsedigit() {
       var s0;
 
-      if (peg$c42.test(input.charAt(peg$currPos))) {
+      if (peg$c39.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c43); }
+        if (peg$silentFails === 0) { peg$fail(peg$c40); }
       }
 
       return s0;
@@ -5914,12 +5766,12 @@ exports["default"] = (function() {
     function peg$parsehexDigit() {
       var s0;
 
-      if (peg$c44.test(input.charAt(peg$currPos))) {
+      if (peg$c41.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c45); }
+        if (peg$silentFails === 0) { peg$fail(peg$c42); }
       }
 
       return s0;
@@ -5930,21 +5782,21 @@ exports["default"] = (function() {
 
       s0 = peg$currPos;
       if (input.charCodeAt(peg$currPos) === 48) {
-        s1 = peg$c46;
+        s1 = peg$c43;
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c47); }
+        if (peg$silentFails === 0) { peg$fail(peg$c44); }
       }
       if (s1 === peg$FAILED) {
         s1 = peg$currPos;
         s2 = peg$currPos;
-        if (peg$c48.test(input.charAt(peg$currPos))) {
+        if (peg$c45.test(input.charAt(peg$currPos))) {
           s3 = input.charAt(peg$currPos);
           peg$currPos++;
         } else {
           s3 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c49); }
+          if (peg$silentFails === 0) { peg$fail(peg$c46); }
         }
         if (s3 !== peg$FAILED) {
           s4 = [];
@@ -5958,20 +5810,21 @@ exports["default"] = (function() {
             s2 = s3;
           } else {
             peg$currPos = s2;
-            s2 = peg$c2;
+            s2 = peg$FAILED;
           }
         } else {
           peg$currPos = s2;
-          s2 = peg$c2;
+          s2 = peg$FAILED;
         }
         if (s2 !== peg$FAILED) {
-          s2 = input.substring(s1, peg$currPos);
+          s1 = input.substring(s1, peg$currPos);
+        } else {
+          s1 = s2;
         }
-        s1 = s2;
       }
       if (s1 !== peg$FAILED) {
-        peg$reportedPos = s0;
-        s1 = peg$c50(s1);
+        peg$savedPos = s0;
+        s1 = peg$c47(s1);
       }
       s0 = s1;
 
@@ -5981,77 +5834,77 @@ exports["default"] = (function() {
     function peg$parsechar() {
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
-      if (peg$c51.test(input.charAt(peg$currPos))) {
+      if (peg$c48.test(input.charAt(peg$currPos))) {
         s0 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c52); }
+        if (peg$silentFails === 0) { peg$fail(peg$c49); }
       }
       if (s0 === peg$FAILED) {
         s0 = peg$currPos;
-        if (input.substr(peg$currPos, 2) === peg$c53) {
-          s1 = peg$c53;
+        if (input.substr(peg$currPos, 2) === peg$c50) {
+          s1 = peg$c50;
           peg$currPos += 2;
         } else {
           s1 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c54); }
+          if (peg$silentFails === 0) { peg$fail(peg$c51); }
         }
         if (s1 !== peg$FAILED) {
-          peg$reportedPos = s0;
-          s1 = peg$c55();
+          peg$savedPos = s0;
+          s1 = peg$c52();
         }
         s0 = s1;
         if (s0 === peg$FAILED) {
           s0 = peg$currPos;
-          if (input.substr(peg$currPos, 2) === peg$c56) {
-            s1 = peg$c56;
+          if (input.substr(peg$currPos, 2) === peg$c53) {
+            s1 = peg$c53;
             peg$currPos += 2;
           } else {
             s1 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c57); }
+            if (peg$silentFails === 0) { peg$fail(peg$c54); }
           }
           if (s1 !== peg$FAILED) {
-            peg$reportedPos = s0;
-            s1 = peg$c58();
+            peg$savedPos = s0;
+            s1 = peg$c55();
           }
           s0 = s1;
           if (s0 === peg$FAILED) {
             s0 = peg$currPos;
-            if (input.substr(peg$currPos, 2) === peg$c59) {
-              s1 = peg$c59;
+            if (input.substr(peg$currPos, 2) === peg$c56) {
+              s1 = peg$c56;
               peg$currPos += 2;
             } else {
               s1 = peg$FAILED;
-              if (peg$silentFails === 0) { peg$fail(peg$c60); }
+              if (peg$silentFails === 0) { peg$fail(peg$c57); }
             }
             if (s1 !== peg$FAILED) {
-              peg$reportedPos = s0;
-              s1 = peg$c61();
+              peg$savedPos = s0;
+              s1 = peg$c58();
             }
             s0 = s1;
             if (s0 === peg$FAILED) {
               s0 = peg$currPos;
-              if (input.substr(peg$currPos, 2) === peg$c62) {
-                s1 = peg$c62;
+              if (input.substr(peg$currPos, 2) === peg$c59) {
+                s1 = peg$c59;
                 peg$currPos += 2;
               } else {
                 s1 = peg$FAILED;
-                if (peg$silentFails === 0) { peg$fail(peg$c63); }
+                if (peg$silentFails === 0) { peg$fail(peg$c60); }
               }
               if (s1 !== peg$FAILED) {
-                peg$reportedPos = s0;
-                s1 = peg$c64();
+                peg$savedPos = s0;
+                s1 = peg$c61();
               }
               s0 = s1;
               if (s0 === peg$FAILED) {
                 s0 = peg$currPos;
-                if (input.substr(peg$currPos, 2) === peg$c65) {
-                  s1 = peg$c65;
+                if (input.substr(peg$currPos, 2) === peg$c62) {
+                  s1 = peg$c62;
                   peg$currPos += 2;
                 } else {
                   s1 = peg$FAILED;
-                  if (peg$silentFails === 0) { peg$fail(peg$c66); }
+                  if (peg$silentFails === 0) { peg$fail(peg$c63); }
                 }
                 if (s1 !== peg$FAILED) {
                   s2 = peg$currPos;
@@ -6068,35 +5921,36 @@ exports["default"] = (function() {
                           s3 = s4;
                         } else {
                           peg$currPos = s3;
-                          s3 = peg$c2;
+                          s3 = peg$FAILED;
                         }
                       } else {
                         peg$currPos = s3;
-                        s3 = peg$c2;
+                        s3 = peg$FAILED;
                       }
                     } else {
                       peg$currPos = s3;
-                      s3 = peg$c2;
+                      s3 = peg$FAILED;
                     }
                   } else {
                     peg$currPos = s3;
-                    s3 = peg$c2;
+                    s3 = peg$FAILED;
                   }
                   if (s3 !== peg$FAILED) {
-                    s3 = input.substring(s2, peg$currPos);
+                    s2 = input.substring(s2, peg$currPos);
+                  } else {
+                    s2 = s3;
                   }
-                  s2 = s3;
                   if (s2 !== peg$FAILED) {
-                    peg$reportedPos = s0;
-                    s1 = peg$c67(s2);
+                    peg$savedPos = s0;
+                    s1 = peg$c64(s2);
                     s0 = s1;
                   } else {
                     peg$currPos = s0;
-                    s0 = peg$c2;
+                    s0 = peg$FAILED;
                   }
                 } else {
                   peg$currPos = s0;
-                  s0 = peg$c2;
+                  s0 = peg$FAILED;
                 }
               }
             }
@@ -6119,11 +5973,11 @@ exports["default"] = (function() {
           s2 = peg$parsechar();
         }
       } else {
-        s1 = peg$c2;
+        s1 = peg$FAILED;
       }
       if (s1 !== peg$FAILED) {
-        peg$reportedPos = s0;
-        s1 = peg$c68(s1);
+        peg$savedPos = s0;
+        s1 = peg$c65(s1);
       }
       s0 = s1;
 
@@ -6139,18 +5993,25 @@ exports["default"] = (function() {
         peg$fail({ type: "end", description: "end of input" });
       }
 
-      throw peg$buildException(null, peg$maxFailExpected, peg$maxFailPos);
+      throw peg$buildException(
+        null,
+        peg$maxFailExpected,
+        peg$maxFailPos < input.length ? input.charAt(peg$maxFailPos) : null,
+        peg$maxFailPos < input.length
+          ? peg$computeLocation(peg$maxFailPos, peg$maxFailPos + 1)
+          : peg$computeLocation(peg$maxFailPos, peg$maxFailPos)
+      );
     }
   }
 
   return {
-    SyntaxError: SyntaxError,
-    parse:       parse
+    SyntaxError: peg$SyntaxError,
+    parse:       peg$parse
   };
 })();
 
 
-},{}],36:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /* jshint node:true */
 
 'use strict';
@@ -6167,7 +6028,7 @@ require('./lib/locales');
 exports = module.exports = IntlMessageFormat;
 exports['default'] = exports;
 
-},{"./lib/locales":7,"./lib/main":41}],37:[function(require,module,exports){
+},{"./lib/locales":7,"./lib/main":40}],36:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -6377,7 +6238,7 @@ SelectFormat.prototype.getOption = function (value) {
 };
 
 
-},{}],38:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -6418,7 +6279,18 @@ function MessageFormat(message, locales, formats) {
     // the other `Intl` APIs.
     var messageFormat = this;
     this.format = function (values) {
+      try {
         return messageFormat._format(pattern, values);
+      } catch (e) {
+        if (e.variableId) {
+          throw new Error(
+            'The intl string context variable \'' + e.variableId + '\'' +
+            ' was not provided to the string \'' + message + '\''
+          );
+        } else {
+          throw e;
+        }
+      }
     };
 }
 
@@ -6553,7 +6425,7 @@ MessageFormat.prototype._findPluralRuleFunction = function (locale) {
 
 MessageFormat.prototype._format = function (pattern, values) {
     var result = '',
-        i, len, part, id, value;
+        i, len, part, id, value, err;
 
     for (i = 0, len = pattern.length; i < len; i += 1) {
         part = pattern[i];
@@ -6568,7 +6440,9 @@ MessageFormat.prototype._format = function (pattern, values) {
 
         // Enforce that all required values are provided by the caller.
         if (!(values && src$utils$$.hop.call(values, id))) {
-            throw new Error('A value must be provided for: ' + id);
+          err = new Error('A value must be provided for: ' + id);
+          err.variableId = id;
+          throw err;
         }
 
         value = values[id];
@@ -6642,13 +6516,13 @@ MessageFormat.prototype._resolveLocale = function (locales) {
 };
 
 
-},{"./compiler":37,"./es5":40,"./utils":42,"intl-messageformat-parser":34}],39:[function(require,module,exports){
+},{"./compiler":36,"./es5":39,"./utils":41,"intl-messageformat-parser":33}],38:[function(require,module,exports){
 // GENERATED FILE
 "use strict";
 exports["default"] = {"locale":"en","pluralRuleFunction":function (n,ord){var s=String(n).split("."),v0=!s[1],t0=Number(s[0])==n,n10=t0&&s[0].slice(-1),n100=t0&&s[0].slice(-2);if(ord)return n10==1&&n100!=11?"one":n10==2&&n100!=12?"two":n10==3&&n100!=13?"few":"other";return n==1&&v0?"one":"other"}};
 
 
-},{}],40:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -6695,10 +6569,11 @@ var objCreate = Object.create || function (proto, props) {
 
     return obj;
 };
+
 exports.defineProperty = defineProperty, exports.objCreate = objCreate;
 
 
-},{"./utils":42}],41:[function(require,module,exports){
+},{"./utils":41}],40:[function(require,module,exports){
 /* jslint esnext: true */
 
 "use strict";
@@ -6710,7 +6585,7 @@ src$core$$["default"].defaultLocale = 'en';
 exports["default"] = src$core$$["default"];
 
 
-},{"./core":38,"./en":39}],42:[function(require,module,exports){
+},{"./core":37,"./en":38}],41:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -6743,35 +6618,37 @@ function extend(obj) {
 exports.hop = hop;
 
 
-},{}],43:[function(require,module,exports){
-IntlRelativeFormat.__addLocaleData({"locale":"es","pluralRuleFunction":function (n,ord){if(ord)return"other";return n==1?"one":"other"},"fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
+},{}],42:[function(require,module,exports){
+IntlRelativeFormat.__addLocaleData({"locale":"es","pluralRuleFunction":function (n,ord){if(ord)return"other";return n==1?"one":"other"},"fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-419","parentLocale":"es"});
-IntlRelativeFormat.__addLocaleData({"locale":"es-AR","parentLocale":"es-419"});
+IntlRelativeFormat.__addLocaleData({"locale":"es-AR","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} días","other":"dentro de {0} días"},"past":{"one":"hace {0} días","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"seg.","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} seg.","other":"dentro de {0} seg."},"past":{"one":"hace {0} seg.","other":"hace {0} seg."}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-BO","parentLocale":"es-419"});
+IntlRelativeFormat.__addLocaleData({"locale":"es-BR","parentLocale":"es-419"});
+IntlRelativeFormat.__addLocaleData({"locale":"es-BZ","parentLocale":"es-419"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-CL","parentLocale":"es-419"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-CO","parentLocale":"es-419"});
-IntlRelativeFormat.__addLocaleData({"locale":"es-CR","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-CR","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-CU","parentLocale":"es-419"});
-IntlRelativeFormat.__addLocaleData({"locale":"es-DO","parentLocale":"es-419","fields":{"year":{"displayName":"Año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"Mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"Día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"Minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"Segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-DO","parentLocale":"es-419","fields":{"year":{"displayName":"Año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"Mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"Día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"Minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"Segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-EA","parentLocale":"es"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-EC","parentLocale":"es-419"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-GQ","parentLocale":"es"});
-IntlRelativeFormat.__addLocaleData({"locale":"es-GT","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
-IntlRelativeFormat.__addLocaleData({"locale":"es-HN","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-GT","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-HN","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-IC","parentLocale":"es"});
-IntlRelativeFormat.__addLocaleData({"locale":"es-MX","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el año próximo","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el mes próximo","-1":"el mes pasado"},"relativeTime":{"future":{"one":"en {0} mes","other":"en {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
-IntlRelativeFormat.__addLocaleData({"locale":"es-NI","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
-IntlRelativeFormat.__addLocaleData({"locale":"es-PA","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-MX","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el año próximo","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"en {0} a","other":"en {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el mes próximo","-1":"el mes pasado"},"relativeTime":{"future":{"one":"en {0} mes","other":"en {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"en {0} m","other":"en {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"en {0} día","other":"en {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"en {0} h","other":"en {0} n"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"en {0} min","other":"en {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"en {0} s","other":"en {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-NI","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-PA","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-PE","parentLocale":"es-419"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-PH","parentLocale":"es"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-PR","parentLocale":"es-419"});
-IntlRelativeFormat.__addLocaleData({"locale":"es-PY","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antes de ayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
-IntlRelativeFormat.__addLocaleData({"locale":"es-SV","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"minute":{"displayName":"minuto","relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-PY","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antes de ayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"seg.","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} seg.","other":"dentro de {0} seg."},"past":{"one":"hace {0} seg.","other":"hace {0} seg."}}}}});
+IntlRelativeFormat.__addLocaleData({"locale":"es-SV","parentLocale":"es-419","fields":{"year":{"displayName":"año","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} año","other":"dentro de {0} años"},"past":{"one":"hace {0} año","other":"hace {0} años"}}},"year-short":{"displayName":"a","relative":{"0":"este año","1":"el próximo año","-1":"el año pasado"},"relativeTime":{"future":{"one":"dentro de {0} a","other":"dentro de {0} a"},"past":{"one":"hace {0} a","other":"hace {0} a"}}},"month":{"displayName":"mes","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} mes","other":"dentro de {0} meses"},"past":{"one":"hace {0} mes","other":"hace {0} meses"}}},"month-short":{"displayName":"m","relative":{"0":"este mes","1":"el próximo mes","-1":"el mes pasado"},"relativeTime":{"future":{"one":"dentro de {0} m","other":"dentro de {0} m"},"past":{"one":"hace {0} m","other":"hace {0} m"}}},"day":{"displayName":"día","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"antier","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"day-short":{"displayName":"d","relative":{"0":"hoy","1":"mañana","2":"pasado mañana","-2":"anteayer","-1":"ayer"},"relativeTime":{"future":{"one":"dentro de {0} día","other":"dentro de {0} días"},"past":{"one":"hace {0} día","other":"hace {0} días"}}},"hour":{"displayName":"hora","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} hora","other":"dentro de {0} horas"},"past":{"one":"hace {0} hora","other":"hace {0} horas"}}},"hour-short":{"displayName":"h","relative":{"0":"esta hora"},"relativeTime":{"future":{"one":"dentro de {0} h","other":"dentro de {0} h"},"past":{"one":"hace {0} h","other":"hace {0} h"}}},"minute":{"displayName":"minuto","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} minuto","other":"dentro de {0} minutos"},"past":{"one":"hace {0} minuto","other":"hace {0} minutos"}}},"minute-short":{"displayName":"min","relative":{"0":"este minuto"},"relativeTime":{"future":{"one":"dentro de {0} min","other":"dentro de {0} min"},"past":{"one":"hace {0} min","other":"hace {0} min"}}},"second":{"displayName":"segundo","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} segundo","other":"dentro de {0} segundos"},"past":{"one":"hace {0} segundo","other":"hace {0} segundos"}}},"second-short":{"displayName":"s","relative":{"0":"ahora"},"relativeTime":{"future":{"one":"dentro de {0} s","other":"dentro de {0} s"},"past":{"one":"hace {0} s","other":"hace {0} s"}}}}});
 IntlRelativeFormat.__addLocaleData({"locale":"es-US","parentLocale":"es-419"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-UY","parentLocale":"es-419"});
 IntlRelativeFormat.__addLocaleData({"locale":"es-VE","parentLocale":"es-419"});
 
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /* jshint node:true */
 
 'use strict';
@@ -6788,7 +6665,7 @@ require('./lib/locales');
 exports = module.exports = IntlRelativeFormat;
 exports['default'] = exports;
 
-},{"./lib/locales":7,"./lib/main":49}],45:[function(require,module,exports){
+},{"./lib/locales":7,"./lib/main":48}],44:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -6803,7 +6680,14 @@ exports["default"] = RelativeFormat;
 
 // -----------------------------------------------------------------------------
 
-var FIELDS = ['second', 'minute', 'hour', 'day', 'month', 'year'];
+var FIELDS = [
+    'second', 'second-short',
+    'minute', 'minute-short',
+    'hour', 'hour-short',
+    'day', 'day-short',
+    'month', 'month-short',
+    'year', 'year-short'
+];
 var STYLES = ['best fit', 'numeric'];
 
 // -- RelativeFormat -----------------------------------------------------------
@@ -6866,11 +6750,11 @@ src$es5$$.defineProperty(RelativeFormat, 'thresholds', {
     enumerable: true,
 
     value: {
-        second: 45,  // seconds to minute
-        minute: 45,  // minutes to hour
-        hour  : 22,  // hours to day
-        day   : 26,  // days to month
-        month : 11   // months to year
+        second: 45, 'second-short': 45,  // seconds to minute
+        minute: 45, 'minute-short': 45, // minutes to hour
+        hour  : 22, 'hour-short': 22, // hours to day
+        day   : 26, 'day-short': 26, // days to month
+        month : 11, 'month-short': 11 // months to year
     }
 });
 
@@ -7073,9 +6957,12 @@ RelativeFormat.prototype._resolveStyle = function (style) {
 
 RelativeFormat.prototype._selectUnits = function (diffReport) {
     var i, l, units;
+    var fields = FIELDS.filter(function(field) {
+        return field.indexOf('-short') < 1;
+    });
 
-    for (i = 0, l = FIELDS.length; i < l; i += 1) {
-        units = FIELDS[i];
+    for (i = 0, l = fields.length; i < l; i += 1) {
+        units = fields[i];
 
         if (Math.abs(diffReport[units]) < RelativeFormat.thresholds[units]) {
             break;
@@ -7086,7 +6973,7 @@ RelativeFormat.prototype._selectUnits = function (diffReport) {
 };
 
 
-},{"./diff":46,"./es5":48,"intl-messageformat":36}],46:[function(require,module,exports){
+},{"./diff":45,"./es5":47,"intl-messageformat":35}],45:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -7121,25 +7008,32 @@ exports["default"] = function (from, to) {
         year     = round(rawYears);
 
     return {
-        millisecond: millisecond,
-        second     : second,
-        minute     : minute,
-        hour       : hour,
-        day        : day,
-        week       : week,
-        month      : month,
-        year       : year
+        millisecond    : millisecond,
+        second         : second,
+        'second-short' : second,
+        minute         : minute,
+        'minute-short' : minute,
+        hour           : hour,
+        'hour-short'   : hour,
+        day            : day,
+        'day-short'    : day,
+        week           : week,
+        'week-short'   : week,
+        month          : month,
+        'month-short'  : month,
+        year           : year,
+        'year-short'   : year
     };
 };
 
 
-},{}],47:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 // GENERATED FILE
 "use strict";
-exports["default"] = {"locale":"en","pluralRuleFunction":function (n,ord){var s=String(n).split("."),v0=!s[1],t0=Number(s[0])==n,n10=t0&&s[0].slice(-1),n100=t0&&s[0].slice(-2);if(ord)return n10==1&&n100!=11?"one":n10==2&&n100!=12?"two":n10==3&&n100!=13?"few":"other";return n==1&&v0?"one":"other"},"fields":{"year":{"displayName":"year","relative":{"0":"this year","1":"next year","-1":"last year"},"relativeTime":{"future":{"one":"in {0} year","other":"in {0} years"},"past":{"one":"{0} year ago","other":"{0} years ago"}}},"month":{"displayName":"month","relative":{"0":"this month","1":"next month","-1":"last month"},"relativeTime":{"future":{"one":"in {0} month","other":"in {0} months"},"past":{"one":"{0} month ago","other":"{0} months ago"}}},"day":{"displayName":"day","relative":{"0":"today","1":"tomorrow","-1":"yesterday"},"relativeTime":{"future":{"one":"in {0} day","other":"in {0} days"},"past":{"one":"{0} day ago","other":"{0} days ago"}}},"hour":{"displayName":"hour","relativeTime":{"future":{"one":"in {0} hour","other":"in {0} hours"},"past":{"one":"{0} hour ago","other":"{0} hours ago"}}},"minute":{"displayName":"minute","relativeTime":{"future":{"one":"in {0} minute","other":"in {0} minutes"},"past":{"one":"{0} minute ago","other":"{0} minutes ago"}}},"second":{"displayName":"second","relative":{"0":"now"},"relativeTime":{"future":{"one":"in {0} second","other":"in {0} seconds"},"past":{"one":"{0} second ago","other":"{0} seconds ago"}}}}};
+exports["default"] = {"locale":"en","pluralRuleFunction":function (n,ord){var s=String(n).split("."),v0=!s[1],t0=Number(s[0])==n,n10=t0&&s[0].slice(-1),n100=t0&&s[0].slice(-2);if(ord)return n10==1&&n100!=11?"one":n10==2&&n100!=12?"two":n10==3&&n100!=13?"few":"other";return n==1&&v0?"one":"other"},"fields":{"year":{"displayName":"year","relative":{"0":"this year","1":"next year","-1":"last year"},"relativeTime":{"future":{"one":"in {0} year","other":"in {0} years"},"past":{"one":"{0} year ago","other":"{0} years ago"}}},"year-short":{"displayName":"yr.","relative":{"0":"this yr.","1":"next yr.","-1":"last yr."},"relativeTime":{"future":{"one":"in {0} yr.","other":"in {0} yr."},"past":{"one":"{0} yr. ago","other":"{0} yr. ago"}}},"month":{"displayName":"month","relative":{"0":"this month","1":"next month","-1":"last month"},"relativeTime":{"future":{"one":"in {0} month","other":"in {0} months"},"past":{"one":"{0} month ago","other":"{0} months ago"}}},"month-short":{"displayName":"mo.","relative":{"0":"this mo.","1":"next mo.","-1":"last mo."},"relativeTime":{"future":{"one":"in {0} mo.","other":"in {0} mo."},"past":{"one":"{0} mo. ago","other":"{0} mo. ago"}}},"day":{"displayName":"day","relative":{"0":"today","1":"tomorrow","-1":"yesterday"},"relativeTime":{"future":{"one":"in {0} day","other":"in {0} days"},"past":{"one":"{0} day ago","other":"{0} days ago"}}},"day-short":{"displayName":"day","relative":{"0":"today","1":"tomorrow","-1":"yesterday"},"relativeTime":{"future":{"one":"in {0} day","other":"in {0} days"},"past":{"one":"{0} day ago","other":"{0} days ago"}}},"hour":{"displayName":"hour","relative":{"0":"this hour"},"relativeTime":{"future":{"one":"in {0} hour","other":"in {0} hours"},"past":{"one":"{0} hour ago","other":"{0} hours ago"}}},"hour-short":{"displayName":"hr.","relative":{"0":"this hour"},"relativeTime":{"future":{"one":"in {0} hr.","other":"in {0} hr."},"past":{"one":"{0} hr. ago","other":"{0} hr. ago"}}},"minute":{"displayName":"minute","relative":{"0":"this minute"},"relativeTime":{"future":{"one":"in {0} minute","other":"in {0} minutes"},"past":{"one":"{0} minute ago","other":"{0} minutes ago"}}},"minute-short":{"displayName":"min.","relative":{"0":"this minute"},"relativeTime":{"future":{"one":"in {0} min.","other":"in {0} min."},"past":{"one":"{0} min. ago","other":"{0} min. ago"}}},"second":{"displayName":"second","relative":{"0":"now"},"relativeTime":{"future":{"one":"in {0} second","other":"in {0} seconds"},"past":{"one":"{0} second ago","other":"{0} seconds ago"}}},"second-short":{"displayName":"sec.","relative":{"0":"now"},"relativeTime":{"future":{"one":"in {0} sec.","other":"in {0} sec."},"past":{"one":"{0} sec. ago","other":"{0} sec. ago"}}}}};
 
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 /*
 Copyright (c) 2014, Yahoo! Inc. All rights reserved.
 Copyrights licensed under the New BSD License.
@@ -7148,10 +7042,10 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
-"use strict";
-
 // Purposely using the same implementation as the Intl.js `Intl` polyfill.
 // Copyright 2013 Andy Earnshaw, MIT License
+
+"use strict";
 
 var hop = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
@@ -7212,19 +7106,13 @@ var isArray = Array.isArray || function (obj) {
 var dateNow = Date.now || function () {
     return new Date().getTime();
 };
+
 exports.defineProperty = defineProperty, exports.objCreate = objCreate, exports.arrIndexOf = arrIndexOf, exports.isArray = isArray, exports.dateNow = dateNow;
 
 
-},{}],49:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"./core":45,"./en":47,"dup":41}],50:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-},{}],51:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
+arguments[4][40][0].apply(exports,arguments)
+},{"./core":44,"./en":46,"dup":40}],49:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -17479,7 +17367,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],52:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 var range; // Create a range object for efficently rendering strings to elements.
@@ -18163,7 +18051,7 @@ var morphdom = morphdomFactory(morphAttrs);
 
 module.exports = morphdom;
 
-},{}],53:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -18317,10 +18205,35 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],54:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
+assert.notEqual = notEqual
+assert.notOk = notOk
+assert.equal = equal
+assert.ok = assert
+
+module.exports = assert
+
+function equal (a, b, m) {
+  assert(a == b, m) // eslint-disable-line eqeqeq
+}
+
+function notEqual (a, b, m) {
+  assert(a != b, m) // eslint-disable-line eqeqeq
+}
+
+function notOk (t, m) {
+  assert(!t, m)
+}
+
+function assert (t, m) {
+  if (!t) throw new Error(m || 'AssertionError')
+}
+
+},{}],53:[function(require,module,exports){
 /* global MutationObserver */
 var document = require('global/document')
 var window = require('global/window')
+var assert = require('assert')
 var watch = Object.create(null)
 var KEY_ID = 'onloadid' + (new Date() % 9e6).toString(36)
 var KEY_ATTR = 'data-' + KEY_ID
@@ -18338,6 +18251,16 @@ if (window && window.MutationObserver) {
       eachMutation(mutations[i].addedNodes, turnon)
     }
   })
+  if (document.body) {
+    beginObserve(observer)
+  } else {
+    document.addEventListener('DOMContentLoaded', function (event) {
+      beginObserve(observer)
+    })
+  }
+}
+
+function beginObserve (observer) {
   observer.observe(document.body, {
     childList: true,
     subtree: true,
@@ -18348,6 +18271,7 @@ if (window && window.MutationObserver) {
 }
 
 module.exports = function onload (el, on, off, caller) {
+  assert(document.body, 'on-load: will not work prior to DOMContentLoaded')
   on = on || function () {}
   off = off || function () {}
   el.setAttribute(KEY_ATTR, 'o' + INDEX)
@@ -18355,6 +18279,9 @@ module.exports = function onload (el, on, off, caller) {
   INDEX += 1
   return el
 }
+
+module.exports.KEY_ATTR = KEY_ATTR
+module.exports.KEY_ID = KEY_ID
 
 function turnon (index, el) {
   if (watch[index][0] && watch[index][2] === 0) {
@@ -18406,42 +18333,7 @@ function eachMutation (nodes, fn) {
   }
 }
 
-},{"global/document":27,"global/window":28}],55:[function(require,module,exports){
-(function (global){
-/**
- * JSON parse.
- *
- * @see Based on jQuery#parseJSON (MIT) and JSON2
- * @api private
- */
-
-var rvalidchars = /^[\],:{}\s]*$/;
-var rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
-var rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
-var rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g;
-var rtrimLeft = /^\s+/;
-var rtrimRight = /\s+$/;
-
-module.exports = function parsejson(data) {
-  if ('string' != typeof data || !data) {
-    return null;
-  }
-
-  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
-
-  // Attempt to parse using the native JSON parser first
-  if (global.JSON && JSON.parse) {
-    return JSON.parse(data);
-  }
-
-  if (rvalidchars.test(data.replace(rvalidescape, '@')
-      .replace(rvalidtokens, ']')
-      .replace(rvalidbraces, ''))) {
-    return (new Function('return ' + data))();
-  }
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],56:[function(require,module,exports){
+},{"assert":52,"global/document":25,"global/window":26}],54:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -18480,7 +18372,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],57:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -18521,7 +18413,193 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],58:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],57:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -18617,7 +18695,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":59,"./socket":61,"./url":62,"debug":12,"socket.io-parser":64}],59:[function(require,module,exports){
+},{"./manager":58,"./socket":60,"./url":61,"debug":11,"socket.io-parser":63}],58:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -19192,7 +19270,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":60,"./socket":61,"backo2":3,"component-bind":9,"component-emitter":10,"debug":12,"engine.io-client":14,"indexof":33,"socket.io-parser":64}],60:[function(require,module,exports){
+},{"./on":59,"./socket":60,"backo2":3,"component-bind":8,"component-emitter":9,"debug":11,"engine.io-client":13,"indexof":32,"socket.io-parser":63}],59:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -19218,7 +19296,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],61:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -19638,7 +19716,7 @@ Socket.prototype.compress = function (compress) {
   return this;
 };
 
-},{"./on":60,"component-bind":9,"component-emitter":10,"debug":12,"parseqs":56,"socket.io-parser":64,"to-array":66}],62:[function(require,module,exports){
+},{"./on":59,"component-bind":8,"component-emitter":9,"debug":11,"parseqs":54,"socket.io-parser":63,"to-array":66}],61:[function(require,module,exports){
 (function (global){
 
 /**
@@ -19717,7 +19795,7 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":12,"parseuri":57}],63:[function(require,module,exports){
+},{"debug":11,"parseuri":55}],62:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -19862,7 +19940,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":65,"isarray":50}],64:[function(require,module,exports){
+},{"./is-buffer":64,"isarray":65}],63:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -20264,7 +20342,7 @@ function error() {
   };
 }
 
-},{"./binary":63,"./is-buffer":65,"component-emitter":10,"debug":12,"has-binary2":29}],65:[function(require,module,exports){
+},{"./binary":62,"./is-buffer":64,"component-emitter":9,"debug":11,"has-binary2":27}],64:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -20281,7 +20359,9 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],66:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28}],66:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -20410,7 +20490,7 @@ module.exports.update = function (fromNode, toNode, opts) {
   }
 }
 
-},{"./update-events.js":69,"bel":5,"morphdom":52}],69:[function(require,module,exports){
+},{"./update-events.js":69,"bel":5,"morphdom":50}],69:[function(require,module,exports){
 module.exports = [
   // attribute events (can be set with attributes)
   'onclick',
@@ -20458,7 +20538,7 @@ var _templateObject = _taggedTemplateLiteral(['\n        <article class="tweets"
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 // server
-var socket = require('socket.io-client')('http://tachira.herokuapp.com');
+var socket = require('socket.io-client')('https://tachira.herokuapp.com');
 
 //localhost
 // const socket = require('socket.io-client')('...');
@@ -20546,4 +20626,4 @@ $('.gMore').on('click', function () {
   }
 });
 
-},{"intl-relativeformat":44,"intl-relativeformat/dist/locale-data/es.js":43,"jquery":51,"socket.io-client":58,"yo-yo":68}]},{},[70]);
+},{"intl-relativeformat":43,"intl-relativeformat/dist/locale-data/es.js":42,"jquery":49,"socket.io-client":57,"yo-yo":68}]},{},[70]);
