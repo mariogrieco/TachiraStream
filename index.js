@@ -33,7 +33,7 @@ t.track('TachiraEnColapso')
 io.on('connection', function (socket) {
     
     t.on('tweet', function (tweet) {
-        io.emit('tweet', tweet)
+        socket.sockets.emit('tweet', tweet)
     })
         
     t.on('error', function (err) {

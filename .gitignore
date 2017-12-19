@@ -2,3 +2,4 @@ node_modules
 temp
 lib
 credentials.js
+yarn.lock
