@@ -28,13 +28,12 @@ var t = new Twitter({
 // })
 
 t.track('tachira')
-// t.track('sancristobal')
-t.track('app30jtachira')
+t.track('TachiraEnColapso')
 
 io.on('connection', function (socket) {
     
     t.on('tweet', function (tweet) {
-        socket.emit('tweet', tweet)
+        io.emit('tweet', tweet)
     })
         
     t.on('error', function (err) {
