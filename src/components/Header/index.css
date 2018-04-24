@@ -1,0 +1,28 @@
+.Header {
+  height: 50px;
+  font-size: 0.9em;
+  border-color: 1px solid red;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1da1f2;
+  padding: 0px 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #e2dddd;
+  box-shadow: 1px 0px 1px 0px #868686;
+}
+
+.Header-badge {
+  border-radius: 30px;
+  border: 1px solid #fdfdfd;
+  background-color: #f5f5f5;
+  padding: 8px 13px;
+  margin: 0px 5px;
+  color: #666;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.Header-Topic {
+  display: block;
+}

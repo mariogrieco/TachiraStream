@@ -1,0 +1,48 @@
+.TweetCard {
+  background-color: white;
+  border-radius: 0.3em;
+  color: #434343;
+  padding: 1.2em;
+  overflow: hidden;
+  max-width: 800px;
+  margin: 20px auto;
+  cursor: pointer;
+  transition: all 0.25s linear;
+  border: 1px solid #f5f5f5;
+  box-shadow: 1px 1px 3px 1px rgba(44,44,44, 0.05);
+  text-align: left;
+}
+
+.TweetCard:hover {
+  box-shadow: 1px 1px 5px 1px rgba(44,44,44, 0.1);
+}
+
+.TweetCard-User {
+  color: #657786;
+}
+
+.TweetCard-UserInfo {
+  margin-bottom: 10px;
+  padding: 5px 0px;
+}
+
+.TweetCard-Header {
+  color: #14171a;
+}
+
+.TweetCard-Text {
+  font-size: 0.9em;
+  line-height: 1.4;
+  color: #555;
+}
+
+.TweetCard-Text::first-letter {
+  font-size: 1em;
+}
+
+.TweetCard-Time {
+  float: right;
+  color: #c2c2c2;
+  letter-spacing: -1px;
+  font-size: 0.88em;
+}
