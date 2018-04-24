@@ -8,7 +8,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {/* <div className='App-Header-main'></div> */}
+        <div className='App-Header-main'></div>
         <header className="App-header">
           <h1 className="App-title">Welcome</h1>
         </header>

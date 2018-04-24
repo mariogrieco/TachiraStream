@@ -9,7 +9,7 @@
   padding: 0px 20px;
   font-weight: bold;
   border-bottom: 1px solid #e2dddd;
-  box-shadow: 1px 0px 1px 0px #868686;
+  box-shadow: 1px 0px 1px 0px rgba(134, 134, 134, 0.45098039215686275);
 }
 
 .Header-badge {
